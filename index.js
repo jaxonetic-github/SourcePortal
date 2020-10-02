@@ -126,7 +126,7 @@ export default function Main() {
   <SafeAreaView style={styles.safeArea}>
   <Provider store={store}>
     <NavigationContainer >
-      <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Navigator openByDefault={true} drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen  name="Home" component={StackedHome} />
       <Drawer.Screen name="Trubrary" component={Trubrary} />
       <Drawer.Screen name="Activities" component={Activities} />

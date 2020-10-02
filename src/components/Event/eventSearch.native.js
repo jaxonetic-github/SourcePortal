@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import withRouter from '../../withRouterManager.js';
 import { bindActionCreators } from 'redux';
-import { StyleSheet, View, TextInput,FlatList} from 'react-native';
+import { StyleSheet, View, TextInput,FlatList,Pressable} from 'react-native';
 import { SwipeRow,Container, Header, Content,Title,Icon,
 Picker, Thumbnail, Text, Body, Right, Button, Toast } from 'native-base';
 import {deleteEventRequest, addEventsToLocal,addEventRequest} from './Redux/Actions/eventActions.js'
@@ -83,7 +83,8 @@ import CalendarView from '../calendarView';
 
 /** Navigate to event-creation screen  */
    _onPress = (itemId) => {
-console.log(ROUTE_EVENT_VIEW+"/"+itemId);
+    console.log(itemId);
+console.log("onPress==>"+ROUTE_EVENT_VIEW+"/"+itemId);
  this.props.history.push(ROUTE_EVENT_VIEW+"/"+itemId );
   };
   /* Navigate to artist-creation screen on [add] buttonpress  */
@@ -112,19 +113,14 @@ _renderItem = (item) => {
 }
   return(
               <View style={styles.viewStyle}>
+              <Pressable onPress={()=>this._onPress(item.item.id)}>
               <Thumbnail source={{uri:/*item.item.imageURI||*/NO_PHOTO_AVAILABLE_URI}}/>
               <View style={styles.innerViewStyle}>
-              {item.item.hasBeenModifiedLocally?<Button onPress={() =>
-              Toast.show({
-                text: "Event only temporarily modified on device",
-                buttonText: "Okay",
-                buttonTextStyle: { color: "#008000" },
-                buttonStyle: { backgroundColor: "#5cb85c" }
-              })} ><Text> {iconManager(ICON_TAG_EDIT,COMMON_ICON_STYLE_MAROON)}</Text></Button>:null}
                   <Title style={styles.rightText} >{item.item.name}</Title>
                   <Text style={styles.rightText} >{formatCalendarObject(item.item.calendar)}</Text>
                <Text note numberOfLines={2}>{item.item.description}</Text>
               </View>
+              </Pressable>
               </View>
             );
 }
@@ -186,10 +182,7 @@ renderSearchField = () =>(
        <Content >
        <CalendarView generalView/>
        <View style={{width:300, backgroundColor:"silver"}}>
-         <Picker
-              mode="dropdown"
-                         selectedValue={this.state.location}
-            >
+         <Picker mode="dropdown" selectedValue={this.state.location}>
             <Picker.Item key={"All-States"} label={"Search By State"} value={"All"} />
              {states}
             </Picker>
@@ -198,17 +191,14 @@ renderSearchField = () =>(
               mode="dropdown"
               iosHeader="Locations"
               iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
-          
               selectedValue={this.state.location}
-              onValueChange={this.onLocationChange.bind(this)}
-            >
+              onValueChange={this.onLocationChange.bind(this)} >
             <Picker.Item key={"All"} label={"Search By Locations"} value={"All"} />
              {locations}
             </Picker> 
         <FlatList
             leftOpenValue={LIST_SWIPELEFT_OPENVALUE}
-            rightOpenValue={LIST_SWIPERIGHT_OPENVALUE}
-           
+            rightOpenValue={LIST_SWIPERIGHT_OPENVALUE}   
           data={this.SearchFilterFunction(this.state.text)}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
@@ -221,7 +211,9 @@ renderSearchField = () =>(
   }
 }
 
-
+/*
+ *    REDUX Specific
+ */
 
 const mapStateToProps = state => {
    const eventKeys = Object.keys(state.events.events);
