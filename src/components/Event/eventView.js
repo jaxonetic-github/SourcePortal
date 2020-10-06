@@ -32,14 +32,14 @@ import moment from 'moment';
     console.log("Eventview::",this.props)
     const tmpEvt = getDefaultEvent();
 
-    const update = this.props.match.params.id;
+    const update = this.props.route.params.params.id;
     if(!update)
     {
       this.props.addEventRequest(tmpEvt);
 
     }
     //setting default state
-          this.state = {dataIndex:(update?this.props.match.params.id:tmpEvt.id), text: ''};
+          this.state = {dataIndex:(update?this.props.route.params.params.id:tmpEvt.id), text: ''};
      }
 
 componentDidMount(){
@@ -168,7 +168,7 @@ return (
               <Text>{this.displayLocation()}</Text>
             </Body>
             <Right>   
-                 <Button transparent title="Event Location" onPress={() => this.props.history.push(ROUTE_MAPVIEW,{key:this.state.dataIndex, initialLocation:this.displayLocation()})} >
+                 <Button transparent title="Event Location" onPress={() => this.props.navigation.navigate("MapView",{key:this.state.dataIndex, initialLocation:this.displayLocation()})} >
                 {iconManager(ICON_TAG_ARROW_RIGHT,COMMON_ICON_STYLE)}
                  </Button>
             </Right>
@@ -182,7 +182,7 @@ return (
               <Text>{this.displayCalendar()}</Text>
             </Body>
             <Right>   
-                 <Button transparent title="Event Calendar" onPress={() => this.props.history.push(ROUTE_EVENT_CALENDAR,{key:this.state.dataIndex, initialDate:this.displayCalendar() })} >
+                 <Button transparent title="Event Calendar" onPress={() => this.props.navigation.navigate("Calendar",{key:this.state.dataIndex, initialDate:this.displayCalendar() })} >
                   {iconManager(ICON_TAG_ARROW_RIGHT,COMMON_ICON_STYLE)}
                 </Button>
             </Right>

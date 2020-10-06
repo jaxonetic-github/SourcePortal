@@ -43,9 +43,10 @@ function handleError(error) {
 */
   constructor(props) {
     super(props);
-    console.log(this.props.location.state.initialLocation);
-    this.state = {inputType:'Address', key:this.props.location.state.key, location:this.props.location.state.initialLocation}
-    console.log(this.props.location.state.key);
+
+    console.log(this.props.route);
+    
+    this.state = {inputType:'Address', key:this.props.route.params.key, location:this.props.route.params.initialLocation}
 
   }
 
@@ -75,7 +76,7 @@ console.log(position,'the location==>', location);
 
 onAddressChange = async (region) =>{
   try{
-console.log(region,"----", this.state);
+console.log(region,"----", this);
 this.props.updateEventLocationByKey({key:this.state.key, location:region});
 this.setState({location:region})
     /*const geo = await Geocoder.from(region);

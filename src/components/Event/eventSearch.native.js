@@ -83,9 +83,9 @@ import CalendarView from '../calendarView';
 
 /** Navigate to event-creation screen  */
    _onPress = (itemId) => {
-    console.log(itemId);
+    console.log(itemId, this);
 console.log("onPress==>"+ROUTE_EVENT_VIEW+"/"+itemId);
- this.props.history.push(ROUTE_EVENT_VIEW+"/"+itemId );
+ this.props.navigation.navigate('Event',{ params: { id: itemId } });//this.props.history.push(ROUTE_EVENT_VIEW+"/"+itemId );
   };
   /* Navigate to artist-creation screen on [add] buttonpress  */
   _onPressNew =async () => {
@@ -113,7 +113,7 @@ _renderItem = (item) => {
 }
   return(
               <View style={styles.viewStyle}>
-              <Pressable onPress={()=>this._onPress(item.item.id)}>
+              <Pressable onPress={()=>this._onPress(item.item.id )}>
               <Thumbnail source={{uri:/*item.item.imageURI||*/NO_PHOTO_AVAILABLE_URI}}/>
               <View style={styles.innerViewStyle}>
                   <Title style={styles.rightText} >{item.item.name}</Title>

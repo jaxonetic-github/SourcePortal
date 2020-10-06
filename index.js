@@ -1,7 +1,9 @@
 /**
  * @format
 
-
+    "mongodb-stitch-react-native-sdk": "^4.4.0",
+    "mongodb-stitch-browser-sdk": "^4.5.0",
+    "mongodb-stitch-react-native-sdk": "^4.8.0",
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
@@ -63,6 +65,8 @@ import SideMenu from 'react-native-side-menu';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 import ProfileSearch from './src/components/Profile/profileSearch.js'
 import { createDrawerNavigator, DrawerContentScrollView,
   DrawerItemList, DrawerItem } from '@react-navigation/drawer';
@@ -86,6 +90,8 @@ console.disableYellowBox = true;
 
 sagaMiddleware.run(rootSaga);
 
+const Tab = createBottomTabNavigator();
+
 
 DrawerImage = () =>{return(
    <Container style={styles.container}><Content>    
@@ -94,21 +100,50 @@ DrawerImage = () =>{return(
               uri:"https://i0.wp.com/www.experience-ancient-egypt.com/wp-content/uploads/2015/05/egyptian-goddess-maat.jpg"
             }}/></Content></Container>)};
 
-
-function StackedHome() {
+/*
+ * A Navigation Stack for Profile related views (i.e. ProfileSearch, Profile)
+ */
+function ProfileStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="ProfileSearch" component={ProfileSearch} />
+      <Stack.Screen name="Profile" component={ProfileView} />
     </Stack.Navigator>
   );
 }
+
+/*
+ * A Navigation Stack for Events related views (i.e. EventSearch, EventView, Calendar and Map Views)
+ */
+function EventStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="EventSearch" component={EventSearch} />
+      <Stack.Screen name="Event" component={EventView} />
+      <Stack.Screen name="Calendar" component={CalendarView} />
+      <Stack.Screen name="MapView" component={MapView} />
+    </Stack.Navigator>
+  );
+}
+
+/*
+ * A Tab Navigation for Activity related views (i.e. Events, Profiles related to Events)
+ */
+function ActivitiesTabs() {
+  return (
+   <Tab.Navigator>
+           <Tab.Screen name="Events" component={EventStack} />
+           <Tab.Screen name="Profile" component={ProfileStack} />
+     </Tab.Navigator>
+  );
+}
+
 
 function CustomDrawerContent(props) {
 
   customProps = {...props, labelStyle:styles.customDrawerLabelStyle, activeBackgroundColor:"silver", inactiveBackgroundColor:"white", style:{backgroundColor:COMMON_DARK_BACKGROUND}};
 
-  return (
-    
+  return ( 
     <DrawerContentScrollView {...customProps}>
     <DrawerImage />
       <DrawerItemList  {...customProps} />
@@ -126,10 +161,10 @@ export default function Main() {
   <SafeAreaView style={styles.safeArea}>
   <Provider store={store}>
     <NavigationContainer >
-      <Drawer.Navigator openByDefault={true} drawerContent={props => <CustomDrawerContent {...props} />}>
-      <Drawer.Screen  name="Home" component={StackedHome} />
+      <Drawer.Navigator  drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen  name="Home" component={Home} />
       <Drawer.Screen name="Trubrary" component={Trubrary} />
-      <Drawer.Screen name="Activities" component={Activities} />
+      <Drawer.Screen name="Activities" component={ActivitiesTabs} />
     </Drawer.Navigator>
     </NavigationContainer>
    </Provider>

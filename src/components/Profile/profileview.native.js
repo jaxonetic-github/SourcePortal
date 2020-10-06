@@ -30,21 +30,17 @@ class ProfileView extends Component {
   constructor(props) {
    super(props);
     
-    const update = this.props.match.params.id ;
+    const update = this.props.route.params.params.id ;
     if(!update) 
     {
       const newProfile = getDefaultProfile();
       this.props.addProfileRequest(newProfile);
       this.state = {dataIndex:newProfile.id, isNewProfile:true}
     }else{
-      this.state = {dataIndex:this.props.match.params.id, isNewProfile:false}
+      this.state = {dataIndex:this.props.route.params.params.id, isNewProfile:false}
     }
-   console.log("ProfileView",this.props);
   }
 
-componentDidMount=()=>{
-  console.log(this.state,"---ProfileView didmount----",this.props)
-}
 
  /**
  *   update  profile 

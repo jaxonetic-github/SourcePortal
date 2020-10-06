@@ -82,14 +82,14 @@ import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACT
 
 
 /** Navigate to artist-creation screen on [add] buttonpress  */
-  _onPress = (itemId) => {console.log("dafdjskalfjdkslafdksal;fjksa;f------",this.itemId);
-this.props.history.push(ROUTE_PROFILE_VIEW+"/"+itemId );
-//this.props.history.goForward();
-}
+  _onPress = (itemId) =>  this.props.navigation.navigate('Profile',{ params: { id: itemId } })
+ //this.props.history.goForward();
+
 
 
 /** Navigate to artist-creation screen on [add] buttonpress  */
-  _onPressNew = () => (this.props.history.push(ROUTE_PROFILE_VIEW+"/-1" ))
+  _onPressNew = () =>  this.props.navigation.navigate('Profile',{ params: { id: -1 } })
+
 
 
 /** Navigate to event-creation screen  */
@@ -123,9 +123,7 @@ renderSearchField = () =>(
                   <Text>{TEXT_VIEW}</Text>
                 </Button>
                 </View >
-                </View>
-
-        
+                </View>  
   );
       
 
@@ -133,7 +131,6 @@ renderSearchField = () =>(
 * duplicate code also found in eventsearch
 */
   addButton = ()=>{
-    console.log(this.props);
     const _addButton = this.props.canAddProfile 
       ?  (<Button transparent  onPress={()=>this._onPressNew()} >
              <Icon ios={ICON_IOS_CIRCLE} android={ICON_ANDROID_CIRCLE} style={COMMON_ICON_STYLE}/>

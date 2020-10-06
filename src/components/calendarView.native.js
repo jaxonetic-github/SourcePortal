@@ -20,9 +20,9 @@ class CalendarView extends Component {
   constructor(props) {
     super(props);
 
-    if (this.props.history)
+    if (this.props.route)
     {
-      this.state = {key:this.props.history.location.state.key, markedDates:[], selected:this.props.history.location.state.initialDate};
+      this.state = {key:this.props.route.params.key, markedDates:[], selected:this.props.route.params.initialDate};
     }
     else 
       if (props && props.generalView)
@@ -30,9 +30,8 @@ class CalendarView extends Component {
         //find the dates for this month
         const thisMonth = moment().format('YYYY-MM-DD');
         const filteredDates = this.calendarFilteredData(thisMonth);
-        this.state = {markedDates:filteredDates, selected:thisMonth}
+        this.state = {key:null, markedDates:filteredDates, selected:thisMonth}
       }
-
   }
 
 
@@ -43,9 +42,7 @@ class CalendarView extends Component {
   }
 
 
-componentDidMount =()=>{
 
-}
 
   calendarFilteredData = (selectedDate)=>{
     console.log(this.state);
@@ -61,6 +58,7 @@ componentDidMount =()=>{
   render() {
  let test ;
         if(!this.props.generalView){
+          console.log(this);
            let selectedEvent = this.props.events.filter((evt)=>evt.id==this.state.key);
      test = selectedEvent[0].calendar.year+"-"+selectedEvent[0].calendar.month+"-"+selectedEvent[0].calendar.day;
   }
@@ -103,9 +101,9 @@ else
 
   onDayPress=(day) =>{
     if(!this.props.generalView)
-       this.props.updateEventCalendarByKey({payload:{year:moment(day.dateString).format('YYYY'), month:moment(day.dateString).format('MM'), day:moment(day.dateString).format('DD')}, key:this.props.location.state.key});
+       this.props.updateEventCalendarByKey({payload:{year:moment(day.dateString).format('YYYY'), month:moment(day.dateString).format('MM'), day:moment(day.dateString).format('DD')}, key:this.props.route.params.key});
     else
-      {console.log(day,"---", tst);
+      {console.log(day,"---");
   }
   }
 }
