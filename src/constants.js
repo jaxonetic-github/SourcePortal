@@ -48,17 +48,16 @@ export const TYPES = require('./redux/types.js');
 
 export const ROUTE_ROOT = '/';
 export const ROUTE_REMOTE_ROOT = '/';
-export const ROUTE_HOME = '/Home';
-export const ROUTE_TRUBRARY = '/Trubrary';
+export const ROUTE_HOME = 'Home';
+export const ROUTE_TRUBRARY = 'Trubrary';
 export const ROUTE_MAPVIEW = '/MapView';
 export const ROUTE_EVENT_CALENDAR = '/EventCalendar';
 export const ROUTE_SIMPLE_INPUT_VIEW = '/SimpleEventInput';
 export const ROUTE_SIMPLE_WEB_VIEW = '/SimpleWebView';
 export const ROUTE_PROFILE_VIEW = '/Activities/ProfileView';
-export const ROUTE_ACTIVITIES = '/Activities';
+export const ROUTE_ACTIVITIES = 'Activities';
 export const ROUTE_EVENT_VIEW = "/Activities/EventView";
 export const ROUTE_SIMPLE_PROFILE_INPUT = '/SimpleInput';
-
 export const ROUTE_YOUTUBELIST_VIEW = '/YoutubeListView';
 
 //*********************  HTML  *********************/
@@ -77,7 +76,7 @@ export const ICON_IOS_GLOBE = "ios-globe";
 export const ICON_ANDROID_GLOBE = "md-globe";
 export const ICON_IOS_MAIL = "ios-mail";
 export const ICON_ANDROID_MAIL = "md-mail";
-export const ICON_IOS_DESCRIPTION = "ios-list-box";
+export const ICON_IOS_DESCRIPTION = "ios-document-outline";
 export const ICON_ANDROID_DESCRIPTION = "md-list-box";
 export const ICON_IOS_LOCATION = "ios-pin";
 export const ICON_ANDROID_LOCATION = "md-pin";

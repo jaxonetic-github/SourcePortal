@@ -184,10 +184,10 @@ const webResources = [
 const resourcesData ={youTubeResources: youTubeResources, webResources:webResources,
                              onlineMediaContent:onlineMediaContent, digitalResources:digitalResources};
 
-const sideBarData = [{routeName:"Home", label:"Home",path:"/" ,requiresVerification:false, icon:"home"},
-                     {routeName:"ProfileView", label:"Profile",path:"/Activities/ProfileView/", requiresVerification:true, icon:"person"}, 
-                    {routeName:"Activities", label:"Activities", path:"/Activities", requiresVerification:false, icon:"search"},
-                    {routeName:"Trubrary", label:"Library",path:"/Trubrary", requiresVerification:false, icon:"business",videoData:null,onlineMediaContent:null,webResources:null} ];
+const sideBarData = [{routeName:"Home", label:"Home",path:"Home" ,requiresVerification:false, icon:"home"},
+                     {routeName:"ProfileView", label:"Profile",path:"ProfileView", requiresVerification:true, icon:"person"}, 
+                    {routeName:"Activities", label:"Activities", path:"Activities", requiresVerification:false, icon:"search"},
+                    {routeName:"Trubrary", label:"Library",path:"Trubrary", requiresVerification:false, icon:"business",videoData:null,onlineMediaContent:null,webResources:null} ];
 
 export const categories=[{title:CATEGORY_HISTORY, description:""}, {title:CATEGORY_ECONOMICS, description:""}, {title:CATEGORY_PSYCHOLOGY, description:""},
                   {title:CATEGORY_OCCULT, description:""}, {title:CATEGORY_MOVER, description:""}];

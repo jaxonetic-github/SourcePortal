@@ -80,8 +80,11 @@ export function updateEventRequest(updatedEvent) {
 export function addEventRequest(newEvent) {
   return { type: ADD_EVENT_REQUEST, payload:newEvent }
 }
+/*
+* successfully added and acknowledged from back end
+*/
 export function addEventSuccess(eventsFromDB) {
-  return { type: ADD_EVENT_SUCCESS, payload:eventsFromDB }
+  return { type: ADD_EVENTS_TO_USEREVENTS, payload:eventsFromDB }
 }
 export function addEventFailure(err) {
   return { type: ADD_EVENT_FAILURE, payload:err }

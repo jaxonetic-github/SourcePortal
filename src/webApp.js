@@ -39,10 +39,6 @@ import withRouter from './withRouterManager.js';
 
   }
 
-componentDidMount(){
-
-    
-}
 
 render=()=>(
   <div id="outer-container" style={{backgroundColor:COMMON_DARK_BACKGROUND}}>

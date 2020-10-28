@@ -15,7 +15,7 @@ import {PROFILES_COLLECTION, EVENT_COLLECTION,
 export  default class CrudService {
 /**
 * @param client: client needed to access backend functions
-* @param db : dao to the Mongo backend collections.  
+* @param db    
 */
  constructor( db, client) {
     this.db = db;
@@ -75,10 +75,11 @@ export  default class CrudService {
  *   @returns {deletedCount:1} on success or {deletedCount:0} or the error stack on exceptions
  */
   deleteProfile = async (profileIdObject)=> {
+    console.log("deleting profile :=", profileIdObject);
    try {
-      
-      const client = await this.client();
+             const client = await this.client();
       const results = await client.callFunction(FUNCTION_DELETE_PROFILE,[profileIdObject]);  
+      console.log("results",results);
       return results;
   }
   catch(error) {
@@ -114,6 +115,7 @@ const options = { upsert: true };
           const client = await this.client();
 
       const results = await client.callFunction(FUNCTION_UPDATEEVENT,[query,update,options]);  
+      console.log("results",results);
       return results;
   }catch(error) {
     return({errorStack:error, arg:eventAction});

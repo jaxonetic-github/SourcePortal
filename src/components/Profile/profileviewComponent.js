@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { StyleSheet,Image, View} from 'react-native';
-import { Container,Button, Header, Content,Item,
-        Accordion,   Text, Icon, Left, Body, Right,H1 } from 'native-base';
+import { StyleSheet,Image,   ImagePickerIOS, View} from 'react-native';
+import { Container,Button,Separator,Thumbnail, Header, Content, List, ListItem,Title,Item,
+                                    Accordion,   Text,Textarea, Icon, Left, Body, Right, Switch, Toast,H1 } from 'native-base';
+import ImagePicker from 'react-native-image-picker';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { updateProfileRequest, addProfileRequest } from './Redux/Actions/profile.js';
-import { getDefaultProfile,ICON_REMOVE_CIRCLE,COMMON_ICON_STYLE, NEED_AT_LEAST_ANONYMOUS_LOGIN, TEXT_SAVE,
+import { getDefaultProfile,iconManager,ICON_REMOVE_CIRCLE,ICON_ADD_CIRCLE,COMMON_ICON_STYLE, NEED_AT_LEAST_ANONYMOUS_LOGIN, TEXT_SAVE,
  TEXT_UPDATE, NO_PHOTO_AVAILABLE_URI,ICON_ALL_ARROWFORWARD,ICON_IOS_MAIL, ICON_ANDROID_MAIL,
 TEXT_WEBSITE, TEXT_MAIL,TEXT_PHONE,TEXT_DESCRIPTION, ICON_IOS_PORTRAIT,ICON_ANDROID_PORTRAIT,
 ICON_IOS_GLOBE, ICON_ANDROID_GLOBE, ICON_IOS_DESCRIPTION,ICON_ANDROID_DESCRIPTION, TEXT_NAME,
@@ -24,26 +25,22 @@ import { UPDATE_PROFILE_DESC_BY_KEY, UPDATE_PROFILE_NAME_BY_KEY, UPDATE_PROFILE_
 /**
 *   ProfileView - The Screen to view and potentially edit a profile.
 */
-class ProfileView extends Component {
+class ProfileViewComponent extends Component {
 
   constructor(props) {
    super(props);
-    
-    const update = this.props.match.params.id ;
+    const update = props.profileIndex ;
     if(!update) 
     {
       const newProfile = getDefaultProfile();
       this.props.addProfileRequest(newProfile);
       this.state = {dataIndex:newProfile.id, isNewProfile:true}
     }else{
-      this.state = {dataIndex:this.props.match.params.id, isNewProfile:false}
+      this.state = {dataIndex:update, isNewProfile:false}
     }
-   console.log("ProfileView",this.props);
+
   }
 
-componentDidMount=()=>{
-  console.log(this.state,"---ProfileView didmount----",this.props)
-}
 
  /**
  *   update  profile 
@@ -76,6 +73,31 @@ onPressImagePicker = () =>{
     path: 'images',
   },
 };
+
+/**
+ * The first arg is the options object for customization (it can also be null or omitted for default options),
+ * The second arg is the callback which sends object: response (more info in the API Reference)
+ */
+ImagePicker.showImagePicker(options, (response) => {
+  console.log('Response = ', response);
+
+  if (response.didCancel) {
+    console.log('User cancelled image picker');
+  } else if (response.error) {
+    console.log('ImagePicker Error: ', response.error);
+  } else if (response.customButton) {
+    console.log('User tapped custom button: ', response.customButton);
+  } else {
+    const source = { uri: response.uri };
+
+    // You can also display the image using data:
+    // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+    this.setState({
+      avatarSource: source,
+    });
+  }
+});
+
 }
 
 
@@ -83,7 +105,7 @@ displayName = () => ( this.state.dataIndex && this.props.profiles[this.state.dat
 displayEmail = () => (this.state.dataIndex && this.props.profiles[this.state.dataIndex] ? this.props.profiles[this.state.dataIndex].email: '');
 displayPhone = () => (this.state.dataIndex && this.props.profiles[this.state.dataIndex] ? this.props.profiles[this.state.dataIndex].phone: '');
 displayWebsite = () => (this.state.dataIndex && this.props.profiles[this.state.dataIndex] ? this.props.profiles[this.state.dataIndex].website: '');
-displayDescription = () => (this.state.dataIndex && this.props.profiles[this.state.dataIndex] ? this.props.profiles[this.state.dataIndex].description: '');
+displayDescription = () => (this.state.dataIndex  && this.props.profiles[this.state.dataIndex] ? this.props.profiles[this.state.dataIndex].description: '');
 displayImageURI = () => (this.state.dataIndex && this.props.profiles[this.state.dataIndex] && (this.props.profiles[this.state.dataIndex].imageURI!=='' )? this.props.profiles[this.state.dataIndex].imageURI: NO_PHOTO_AVAILABLE_URI);
 
 /*
@@ -117,7 +139,7 @@ displayImageURI = () => (this.state.dataIndex && this.props.profiles[this.state.
                <Text style={{color:"silver"}}>{titleText}</Text>
               </Item>
             <Text style={{flex:1,alignSelf:"center",justifyContent:"center",backgroundColor:"white"}}>{bodyText}</Text>
-            {this.state.dataIndex===this.props.profileIndex ? iconDisplay:null }
+            {this.state.dataIndex==this.props.profileIndex ? iconDisplay:null }
           </View>);
           }
            
@@ -129,7 +151,7 @@ displayImageURI = () => (this.state.dataIndex && this.props.profiles[this.state.
                       <SimpleInputEdit inputType={ (this.state.dataIndex?item.updateAction: item.addAction)}
                         profileIndex={ this.state.dataIndex} inputInitialValue={item.displayText }/>
               </View>);
-    return (this.state.dataIndex===this.props.profileIndex )? view : null;
+    return (this.state.dataIndex==this.props.profileIndex )? view : null;
 
 }
 
@@ -138,7 +160,7 @@ displayImageURI = () => (this.state.dataIndex && this.props.profiles[this.state.
 */
   render(){
 
-    const isPersonalProfile = (typeof this.state.dataIndex !== 'undefined')&& (this.state.dataIndex === this.props.profileIndex);
+    const isPersonalProfile = (typeof this.state.dataIndex !== 'undefined')&& (this.state.dataIndex == this.props.profileIndex);
     const headerTitle =  PROFILE  ;
    
 
@@ -168,6 +190,7 @@ style={{ paddingBottom:15,paddingTop:5}}
         animation={true}
          renderContent={this._renderContent}
        renderHeader= {(item, expanded)=> {
+          const title = item;
             return (    
               this._renderHeader(expanded,item.icon_ios, item.icon_droid, COMMON_ICON_STYLE, item.titleText, item.displayText,
                   item.displayText,null )
@@ -176,7 +199,7 @@ style={{ paddingBottom:15,paddingTop:5}}
  });
     return (
       <Container  style={{backgroundColor: COMMON_DARK_BACKGROUND}}>
-        <Header style={{backgroundColor: COMMON_DARK_BACKGROUND, height:55, color:"white"}}>
+         <Header style={{backgroundColor: COMMON_DARK_BACKGROUND, height:55, color:"white"}}>
             <Body>
               <H1 style={{color:"silver", textTransform:"capitalize", fontSize:35}}>{headerTitle}</H1>
             </Body>
@@ -201,36 +224,6 @@ style={{ paddingBottom:15,paddingTop:5}}
   }
 }   
 
-const mapStateToProps = state => {
-   const isConnected =  ((state.auth!= NEED_AT_LEAST_ANONYMOUS_LOGIN) && state.auth.auth &&  (state.auth.auth.loggedInProviderName=="oauth2-google"));
-   const profileIndex =  isConnected? state.auth.auth.userProfile.identities[0].id :null;
-   const profiles = state.profiles.profiles;
-
-  return {
-    profileIndex: profileIndex,
-    isConnected : isConnected,
-    isGoogleUser: (isConnected && state.auth.auth.userProfile.identities[0].id),
-    profiles: profiles,
-    email: profileIndex && profiles[profileIndex] ? profiles[profileIndex].email : state.profiles.tmpProfile.email,
-    name: profileIndex && profiles[profileIndex]  ? profiles[profileIndex].name : state.profiles.tmpProfile.name,
-    phone: profileIndex && profiles[profileIndex] ? profiles[profileIndex].phone : state.profiles.tmpProfile.phone,
-    website: profileIndex && profiles[profileIndex] ? profiles[profileIndex].website : state.profiles.tmpProfile.website,
-    description: profileIndex && profiles[profileIndex] ? profiles[profileIndex].description : state.profiles.tmpProfile.description,
-    imageURI: profileIndex && profiles[profileIndex] && profiles[profileIndex].imageURI !='' ? profiles[profileIndex].imageURI : NO_PHOTO_AVAILABLE_URI
-  }
-}
-
-/**
- * Potential properties to override state
- */
-ProfileView.propTypes = {
-  id: PropTypes.string
-};
-
-function matchDispatchToProps(dispatch){
-  return bindActionCreators({updateProfileRequest:updateProfileRequest, addProfileRequest:addProfileRequest}, dispatch)
-}
-
 const styles = StyleSheet.create({
    profileImage:{width:195, height:240},
    profileSeparatorStyle:{backgroundColor:"silver"}
@@ -238,5 +231,14 @@ const styles = StyleSheet.create({
 
 
 
-export default connect(mapStateToProps, matchDispatchToProps)(ProfileView)
+/**
+ * Potential properties to override state
+ */
+ProfileViewComponent.propTypes = {
+  id: PropTypes.string
+};
+
+
+
+export default ProfileViewComponent;
 

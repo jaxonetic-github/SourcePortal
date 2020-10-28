@@ -42,7 +42,7 @@ async componentDidMount() {
   // Fetch all collections, including their products
 client.collection.fetchAllWithProducts().then((collections) => {
   // Do something with the collections
-  console.log(collections);
+  console.log("Collections::",collections);
   console.log(collections[0].products);
 });
  /*          
@@ -211,7 +211,6 @@ locations : LOCATION_LIST,categories:CATEGORY_LIST,
   render() {
                   const { match, location, history } = this.props;
 
-    console.log(this.props);
     return(
     <Container style={{backgroundColor:COMMON_DARK_BACKGROUND, flex:1, height:"100%"}}>
       <Content>

@@ -10,7 +10,10 @@ import  Geocoder from 'react-native-geocoding';
 /*import  {deleteManyEvents, deleteManyProfiles, deleteEvent, deleteProfile, 
         updateSingleEvent, updateSingleProfile, insertSingleProfile,
         insertSingleEvent, fetchEvents, fetchProfilesDB, getUserList} from './StitchCRUD_api.js'*/
-import  CrudService from "./stitchCRUD_api.js"
+
+import {getAnonymousCredential, getRealmApp} from "./realmApp.js"
+import  CrudService from "./stitchCRUD_api.js";
+import Realm from 'realm';
 
 /**
  *
@@ -28,20 +31,48 @@ import  CrudService from "./stitchCRUD_api.js"
   return client;
   }
 
+
+
 /**
  * Initialize sub "services" like CRUD services
  *
  */
   async initialize(){
     
-    let client = await ServicesManager.dbClient();
+    /*
+    let client = await ServicesManager.dbClient(REMOTE_RESOURCE_STRING);
     this.db = await client.getServiceClient(RemoteMongoClient.factory, ATLAS_FACTORY).db(DBNAME);
     this.stitchCrudServices = new CrudService(this.db, ServicesManager.dbClient);
    this.crud = this.stitchCrudServices;
-   
-  }
+   */
+
+    const appId = REMOTE_RESOURCE_STRING; // Set Realm app ID here.
+
+       const appConfig = {
+      id: REMOTE_RESOURCE_STRING,
+      timeout: 10000,
+ /*     app: {
+        name: 'default',
+        version: '0',
+      },*/
+    };
+    /*
+   let app = new Realm.App({
+      id: "REMOTE_RESOURCE_STRING",
+      timeout: 10000});
+*/
+    // an authenticated user is required to access a MongoDB instance
+    //user = await app.logIn(Realm.Credentials.anonymous());
 
 
+
+    // an authenticated user is required to access a MongoDB instance
+   // let user = await app.logIn(Realm.Credentials.anonymous());
+
+    console.log("ServicesManager::",user);
+
+
+}
 
 /**
  * Privately retrieve the google keys required for google sign in and Geocoding API
@@ -71,11 +102,12 @@ async configureGoogleKeys(){
     // Check if this user has already authenticated and we're here
   const client = await ServicesManager.dbClient();
 
+
   if (client.auth.isLoggedIn){
     authorizedUser = client.auth.authInfo;
   }
   else{
-    authorizedUser = await  client.auth.loginWithCredential(new AnonymousCredential()) ;
+    authorizedUser = await  client.auth.loginWithCredential(this.credentials) ;
   }
   
   return  authorizedUser;

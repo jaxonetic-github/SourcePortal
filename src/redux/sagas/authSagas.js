@@ -300,9 +300,9 @@ export function *loadYoutubeLists() {
  */
 export  function* rootSaga() {
   let authUser;
-  const service =  new ServicesManager(REMOTE_RESOURCE_STRING);
-  console.log("rootsaga",service);
-yield service.initialize()
+  const service =  new ServicesManager();
+
+yield service.initialize(REMOTE_RESOURCE_STRING)
 //  yield service.authListen();
 
 try{

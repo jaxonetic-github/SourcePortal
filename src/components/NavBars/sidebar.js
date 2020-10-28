@@ -24,7 +24,7 @@ class SideBar extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log("sidebar props",this.props);
+    console.log("\nsidebar props",this.props.navigation);
     }
 
 /**
@@ -32,6 +32,7 @@ class SideBar extends React.Component {
  */
 _listDataFilter= (data) =>{
   const tmpData =data?  data.filter((item)=>{
+
       return ((item.requiresVerification && this.props.isLoggedIn)|| !item.requiresVerification)?true:false;}):[];
 
   return tmpData;
@@ -52,11 +53,16 @@ renderHeader = () =>{return(
 /** 
   * Render a listitem/row into the list
   * @param data:  a sidebar data record
-  */
+  * this.props.history.push(data.item.path.indexOf(ROUTE_PROFILE_VIEW)>=0?data.item.path+this.props.profileIndex:data.item.path, {user:true, id:this.props.profileIndex})
+    */
       _renderRow=(data) => {
+
+        const tst = data.item.path.indexOf(ROUTE_PROFILE_VIEW)>=0;
+
+        console.log(tst,"Render Row::",data.item);
                return (
                 <ListItem style={styles.listItemStyles}
-                  button onPress={() => this.props.history.push(data.item.path.indexOf(ROUTE_PROFILE_VIEW)>=0?data.item.path+this.props.profileIndex:data.item.path, {user:true, id:this.props.profileIndex})}>
+                  button onPress={() =>this.props.navigation.navigate(data.item.path) }>
                   <Left>
                   {iconManager(data.item.icon, styles.headerIconStyle)}
                <Text style={styles.menuItemStyles}>{data.item.label}</Text>
@@ -71,14 +77,14 @@ renderHeader = () =>{return(
     _keyExtractor = (item, index) =>{  return item.routeName};
 
 
- /**
-  * Render
+ /**   
+  * Render   data={this._listDataFilter(this.props.sideBarData)}
   */
   render() {
     return (<Container style={{backgroundColor:COMMON_DARK_BACKGROUND}}><Content><Card><CardItem>
         <FlatList 
           ListHeaderComponent={this.renderHeader}
-          data={this._listDataFilter(this.props.sideBarData)}
+          data={this.props.sideBarData}
           renderItem={this._renderRow}
           keyExtractor={this._keyExtractor}
            ItemSeparatorComponent = {COMMON_LISTVIEW_ITEM_SEPARATOR}
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => (
-    {isLoggedIn: (state.auth!==1) && (state.auth.auth.loggedInProviderName==="oauth2-google"),
+    {isLoggedIn: true, //(state.auth!==1) && (state.auth.auth.loggedInProviderName==="oauth2-google"),
     profileIndex: ((state.auth!== NEED_AT_LEAST_ANONYMOUS_LOGIN) &&  (state.auth.auth.loggedInProviderName==="oauth2-google") && state.auth.auth.userProfile.identities[0].id) ?state.auth.auth.userProfile.identities[0].id:null,
     sideBarData: state.sideBar,
     sideBarIconStyle: COMMON_ICON_STYLE,

@@ -50,7 +50,7 @@ import SimpleWebview from './src/components/WebResources/simpleWebView.js';
 import Home from './src/components/Home/home';
 import CalendarView from './src/components/calendarView';
 import MapView from './src/components/mapview';
-import ProfileView from './src/components/Profile/profileview';
+import ProfileView from './src/components/Profile/profileview.native.js';
 import EventView from './src/components/Event/eventView.js';
 import EventSearch from './src/components/Event/eventSearch';
 
@@ -70,19 +70,22 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileSearch from './src/components/Profile/profileSearch.js'
 import { createDrawerNavigator, DrawerContentScrollView,
   DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+// import {AuthProvider} from './src/services/realmApp.js';
 
 
 const sagaMiddleware = createSagaMiddleware();
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 //combine reducers
 const rootReducer = combineReducers({profiles: profilesReducer, events:eventsReducer, auth: authReducer, resourcesData:resourcesReducer, 
   sideBar:sideBarReducer,videoMediaPromotions:videoRefsReducer});
 
-//create redux store
-const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaMiddleware, logger) );
+//create redux storey
+
+const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaMiddleware/*, logger*/) );
 
 
 //YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps','Warning: componentWillUpdate', 'Warning: componentWillMount']);
@@ -90,15 +93,7 @@ console.disableYellowBox = true;
 
 sagaMiddleware.run(rootSaga);
 
-const Tab = createBottomTabNavigator();
 
-
-DrawerImage = () =>{return(
-   <Container style={styles.container}><Content>    
-    <Image  style={styles.headerImageStyles}
-            source={{
-              uri:"https://i0.wp.com/www.experience-ancient-egypt.com/wp-content/uploads/2015/05/egyptian-goddess-maat.jpg"
-            }}/></Content></Container>)};
 
 /*
  * A Navigation Stack for Profile related views (i.e. ProfileSearch, Profile)
@@ -142,11 +137,9 @@ function ActivitiesTabs() {
 function CustomDrawerContent(props) {
 
   customProps = {...props, labelStyle:styles.customDrawerLabelStyle, activeBackgroundColor:"silver", inactiveBackgroundColor:"white", style:{backgroundColor:COMMON_DARK_BACKGROUND}};
-
   return ( 
     <DrawerContentScrollView {...customProps}>
-    <DrawerImage />
-      <DrawerItemList  {...customProps} />
+       <SideBar  {...customProps} />
       <DrawerItem {...customProps} label="Help" onPress={() => alert('Link to help')} />
     </DrawerContentScrollView>
   );
@@ -159,15 +152,18 @@ export default function Main() {
   
   return (<Root>
   <SafeAreaView style={styles.safeArea}>
+
   <Provider store={store}>
     <NavigationContainer >
       <Drawer.Navigator  drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen  name="Home" component={Home} />
       <Drawer.Screen name="Trubrary" component={Trubrary} />
       <Drawer.Screen name="Activities" component={ActivitiesTabs} />
+      <Drawer.Screen name="ProfileView" component={ProfileView} />
     </Drawer.Navigator>
     </NavigationContainer>
    </Provider>
+
 </SafeAreaView>
    </Root>);
   
