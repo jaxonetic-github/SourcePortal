@@ -69,36 +69,61 @@ import {
   addEventWebsite,
   addEventImage,
 } from './Event/Redux/Actions/eventActions.js';
-import SimpleInputEdit from './simpleInputComponent.js';
+import {TextInput, StyleSheet} from 'react-native';
 
-function matchDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      updateProfileDescByKey: updateProfileDescByKey,
-      updateProfileImageByKey: updateProfileImageByKey,
-      updateProfileEmailByKey: updateProfileEmailByKey,
-      updateProfilePhoneByKey: updateProfilePhoneByKey,
-      updateProfileWebsiteByKey: updateProfileWebsiteByKey,
-      updateProfileNameByKey: updateProfileNameByKey,
-      profileName: addProfileName,
-      profileEmail: addProfileEmail,
-      profileWebsite: addProfileWebsite,
-      profilePhone: addProfilePhone,
-      profileDescription: addProfilePhone,
-      updateEventDescByKey: updateEventDescByKey,
-      updateEventImageByKey: updateEventImageByKey,
-      updateEventEmailByKey: updateEventEmailByKey,
-      updateEventPhoneByKey: updateEventPhoneByKey,
-      updateEventWebsiteByKey: updateEventWebsiteByKey,
-      updateEventNameByKey: updateEventNameByKey,
-      eventName: addEventName,
-      eventEmail: addEventEmail,
-      eventWebsite: addEventWebsite,
-      eventPhone: addEventPhone,
-      eventDescription: addEventPhone,
-    },
-    dispatch,
-  );
+/**
+ *A custom html input textfield
+ */
+class SimpleInputEdit extends Component {
+  constructor(props) {
+    super(props);
+    console.log('SimpleInput constructor', this.props);
+    const inputType = this.props.inputType;
+    const inputInitialValue = this.props.inputInitialValue || 'default';
+    const key = this.props.profileIndex || null;
+
+    this.state = {
+      text: inputInitialValue,
+      inputType: inputType,
+      inputInitialValue: inputInitialValue,
+      key: key,
+      names: [],
+    };
+  }
+
+  render() {
+    return (
+      <TextInput
+        style={styles.input}
+        value={this.state.text}
+        onChangeText={(text) => this.setState({text: text})}
+        onSubmitEditing={(editing) => {
+          console.log('editing::', editing);
+        }}
+        placeHolder={this.state.inputType}
+        onBlur={(blur) => console.log('onBlur')}
+      />
+    );
+  }
 }
 
-export default withRouter(connect(null, matchDispatchToProps)(SimpleInputEdit));
+const styles = StyleSheet.create({
+  input: {
+    width: 350,
+    height: 55,
+    backgroundColor: '#42A5F5',
+    margin: 10,
+    padding: 8,
+    color: 'white',
+    borderRadius: 14,
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default SimpleInputEdit;

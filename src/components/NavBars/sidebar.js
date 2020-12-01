@@ -24,7 +24,7 @@ class SideBar extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log("\nsidebar props",this.props.navigation);
+   // console.log("\nsidebar props",this.props.navigation);
     }
 
 /**
@@ -53,16 +53,14 @@ renderHeader = () =>{return(
 /** 
   * Render a listitem/row into the list
   * @param data:  a sidebar data record
-  * this.props.history.push(data.item.path.indexOf(ROUTE_PROFILE_VIEW)>=0?data.item.path+this.props.profileIndex:data.item.path, {user:true, id:this.props.profileIndex})
     */
       _renderRow=(data) => {
 
         const tst = data.item.path.indexOf(ROUTE_PROFILE_VIEW)>=0;
-
-        console.log(tst,"Render Row::",data.item);
+ 
                return (
                 <ListItem style={styles.listItemStyles}
-                  button onPress={() =>this.props.navigation.navigate(data.item.path) }>
+                  button onPress={() =>this.props.navigation.navigate(data.item.path, {  profileIndex: 1, role:this.props.profileIndex, loggedInUserProfile:this.props.loggedInUserProfile  }) }>
                   <Left>
                   {iconManager(data.item.icon, styles.headerIconStyle)}
                <Text style={styles.menuItemStyles}>{data.item.label}</Text>
@@ -112,8 +110,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => (
     {isLoggedIn: true, //(state.auth!==1) && (state.auth.auth.loggedInProviderName==="oauth2-google"),
-    profileIndex: ((state.auth!== NEED_AT_LEAST_ANONYMOUS_LOGIN) &&  (state.auth.auth.loggedInProviderName==="oauth2-google") && state.auth.auth.userProfile.identities[0].id) ?state.auth.auth.userProfile.identities[0].id:null,
+    profileIndex:1,// ((state.auth!== NEED_AT_LEAST_ANONYMOUS_LOGIN) &&  (state.auth.auth.loggedInProviderName==="oauth2-google") && state.auth.auth.userProfile.identities[0].id) ?state.auth.auth.userProfile.identities[0].id:null,
     sideBarData: state.sideBar,
+    loggedInUserProfile:state.profiles.profiles[1],
     sideBarIconStyle: COMMON_ICON_STYLE,
 })
 

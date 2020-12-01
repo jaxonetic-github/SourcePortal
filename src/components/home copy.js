@@ -1,14 +1,50 @@
-import React, { Component } from "react";
-import { TouchableHighlight, StyleSheet,Error, View ,Image, TouchableOpacity,TouchableIcon, FlatList,
-Picker, Modal} from 'react-native';
-import axios from "axios";
+import React, {Component} from 'react';
+import {
+  TouchableHighlight,
+  StyleSheet,
+  Error,
+  View,
+  Image,
+  TouchableOpacity,
+  TouchableIcon,
+  FlatList,
+  Picker,
+  Modal,
+} from 'react-native';
+import axios from 'axios';
 import SimpleWebView from './WebResources/simpleWebView.js';
 
-import {resourceData, COMMON_DARK_BACKGROUND,TEXT_EVERYWHERE,TEXT_All, LOCATION_LIST,CATEGORY_LIST,
-      TEXT_CHOOSE_VIBE, TEXT_WHATS_GOING_ON,COMMON_ICON_STYLE } from '../constants.js';
+import {
+  resourceData,
+  COMMON_DARK_BACKGROUND,
+  TEXT_EVERYWHERE,
+  TEXT_All,
+  LOCATION_LIST,
+  CATEGORY_LIST,
+  TEXT_CHOOSE_VIBE,
+  TEXT_WHATS_GOING_ON,
+  COMMON_ICON_STYLE,
+} from '../constants.js';
 import WebResourcesList from './WebResources/webResourcesList.js';
 //import FitImage from 'react-native-fit-image';
-import { Container, Header, Content, Card, CardItem,ListItem, Thumbnail,Button, Text, Icon,Right, Title, Left, Body,Form, Picker as AltPicker } from 'native-base';
+import {
+  Container,
+  Header,
+  Content,
+  Card,
+  CardItem,
+  ListItem,
+  Thumbnail,
+  Button,
+  Text,
+  Icon,
+  Right,
+  Title,
+  Left,
+  Body,
+  Form,
+  Picker as AltPicker,
+} from 'native-base';
 //import { Provider } from 'react-redux'
 //import rootReducer from './reducers'
 //import { createStore } from 'redux'
@@ -18,151 +54,177 @@ import MapView from 'react-native-maps';
 import MapScreen from './mapview.js';
 
 export default class QuickSearch extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      locations : LOCATION_LIST,categories:CATEGORY_LIST,
-      selectedCategory:undefined,
+      locations: LOCATION_LIST,
+      categories: CATEGORY_LIST,
+      selectedCategory: undefined,
       selectedState: undefined,
       modalVisible: false,
     };
-    console.log("-----------------------------------",this.props.navigation);
+    console.log('-----------------------------------',this.props.navigation);
     //this.props.navigation.navigationOptions();
   }
-  async componentDidMount(){
-    console.log("-----------------------------------",this.props.navigation);
+  async componentDidMount() {
+    console.log('-----------------------------------',this.props.navigation);
   }
 
+  showModal = () => (
+    <Modal
+      animationType="slide"
+      transparent={false}
+      visible={this.state.modalVisible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+      }}>
+      <View style={{marginTop: 22}}>
+        <SimpleWebView
+          style={{width: 300, height: 300}}
+          url="https://youtu.be/K_nOQ9y4eT8?t=4710"
+          title="Dr Ben quote"
+        />
 
-  showModal = ()=>(
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View style={{marginTop: 22}}>
-          <SimpleWebView style={{width:300, height:300}} url="https://youtu.be/K_nOQ9y4eT8?t=4710" title="Dr Ben quote" />
+        <View>
+          <TouchableHighlight
+            onPress={() => {
+              this.toggleModalVisibility();
+            }}>
+            <Text>Back</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+    </Modal>
+  );
 
-            <View>
-
-              <TouchableHighlight
-                onPress={() => {
-                  this.toggleModalVisibility()}
-                }>
-                <Text>Back</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>)
- 
 /** toggle the modal view */
- toggleModalVisibility = ()=>{this.setState({modalVisible:!this.state.modalVisible})}
+  toggleModalVisibility = () => {
+    this.setState({modalVisible: !this.state.modalVisible});
+  };
 
+  async componentWillMount() {
 
-
-
-    async componentWillMount() {
-       
       this.watchID = navigator.geolocation.watchPosition((position) => {
-        console.log( position );
-         const lastPosition = JSON.stringify(position);
-         this.setState({ lastPosition });
-      });
-    }
-         renderPicker = (list, placeholder) => {
-    const widget =   <Form>
-            <AltPicker
-              mode="dropdown"
-              placeholder={placeholder}
-              placeholderStyle={{ color: "#bfc6ea" }}
-              placeholderIconColor="#007aff"
-              style={{ width: 200 }}
-              selectedValue={this.state.selectedCategory}
-              onValueChange={this.onCategoryValueChange.bind(this)}
-            >
- {list.map((value, index) => {
-        return <Picker.Item label={value.label} value={value.value} key={value.value} />
-      })}  
-            </AltPicker>
-          </Form>
+      console.log(position);
+      const lastPosition = JSON.stringify(position);
+      this.setState({lastPosition});
+    });
+  }
+  renderPicker = (list, placeholder) => {
+    const widget = (
+      <Form>
+        <AltPicker
+          mode="dropdown"
+          placeholder={placeholder}
+          placeholderStyle={{color: '#bfc6ea'}}
+          placeholderIconColor="#007aff"
+          style={{width: 200}}
+          selectedValue={this.state.selectedCategory}
+          onValueChange={this.onCategoryValueChange.bind(this)}>
+          {list.map((value, index) => {
+            return (
+              <Picker.Item
+                label={value.label}
+                value={value.value}
+                key={value.value}
+              />;
+            );
+          })}
+        </AltPicker>
+      </Form>;
+    );
 
-        return widget;
-    };
+    return widget;
+  };
 
   onValueChange(value: string) {
     this.setState({
-      locations        : LOCATION_LIST,
-      categories       :CATEGORY_LIST,
-      selectedCategory : this.state.selectedCategory,
-      selectedState   : value
+      locations: LOCATION_LIST,
+      categories: CATEGORY_LIST,
+      selectedCategory: this.state.selectedCategory,
+      selectedState: value,
     });
   }
 
   onCategoryValueChange(value: string) {
     this.setState({
-locations : LOCATION_LIST,categories:CATEGORY_LIST,
+      locations: LOCATION_LIST,
+      categories: CATEGORY_LIST,
       selectedCategory: value,
       selectedState: this.state.selectedState,
     });
   }
   async onSeeVideo() {
-   this.setState({modalVisible:true});
+    this.setState({modalVisible: true});
   }
 
-   renderHeader = () => {
-        return(
-          <Text style={{position:"absolute"}}>Featured Lectures and Debates</Text>
-        );
-    };
- /** Exract a key from an object for the List */
-    _keyExtractor = (item, index) =>{  return item.url};
+  renderHeader = () => {
+    return (
+      <Text style={{position: 'absolute'}}>Featured Lectures and Debates</Text>
+    );
+  };
+  /** Exract a key from an object for the List */
+  _keyExtractor = (item, index) => {
+    return item.url;
+  };
 
-   _renderContent = () => {
-        return(
-          <Text style={{position:"absolute"}}>Featured Lectures and Debates</Text>
-        );
-    };
+  _renderContent = () => {
+    return (
+      <Text style={{position: 'absolute'}}>Featured Lectures and Debates</Text>
+    );
+  };
 
   render() {
-
     return (
-         <Container>
-    
-        <Content padder>
-                 <Text>
-       <Icon name="arrow-forward" style={COMMON_ICON_STYLE}/>
-       <Icon name="arrow-forward" style={COMMON_ICON_STYLE}/>
-          </Text>
-                 <Card><CardItem>
-<Text>“When I read history, I cannot read it as the conquerer, I must read it as the conquered; therefore, I have to read history as it affects me.  I have to put myself as the centroid figure, and how does that history affect me.Therefore the solution must come up in my perspective not in the conquerers perspective.” </Text>
-          </CardItem>
-          <CardItem>
-<TouchableOpacity  style={styles.touchable} onPress= {async ()=>{this.onSeeVideo()}} >
-<Image style={{width:220 , height:220, borderRadius:15}} 
-source={{uri:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Dr_Ben.jpg/220px-Dr_Ben.jpg'}}/>
-<Title>Dr Ben</Title>
-              </TouchableOpacity>
+      <Container>
 
-          </CardItem>
-    </Card>
+        <Content padder>
+          <Text>
+            <Icon name="arrow-forward" style={COMMON_ICON_STYLE} />
+            <Icon name="arrow-forward" style={COMMON_ICON_STYLE} />
+          </Text>
+          <Card>
+            <CardItem>
+              <Text>
+                “When I read history, I cannot read it as the conquerer, I must
+                read it as the conquered; therefore, I have to read history as
+                it affects me. I have to put myself as the centroid figure, and
+                how does that history affect me.Therefore the solution must come
+                up in my perspective not in the conquerers perspective.”{' '}
+              </Text>
+            </CardItem>
+            <CardItem>
+              <TouchableOpacity
+                style={styles.touchable}
+                onPress={async () => {
+                  this.onSeeVideo();
+                }}>
+                <Image
+                  style={{width: 220, height: 220, borderRadius: 15}}
+                  source={{
+                    uri:
+                      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Dr_Ben.jpg/220px-Dr_Ben.jpg',
+                  }}
+                />
+                <Title>Dr Ben</Title>
+              </TouchableOpacity>
+            </CardItem>
+          </Card>
 
           <Card>
             <CardItem>
               <Body>
-              <Text>{TEXT_WHATS_GOING_ON}</Text>
+                <Text>{TEXT_WHATS_GOING_ON}</Text>
 
-              {this.renderPicker(this.state.locations, TEXT_EVERYWHERE)}
-              <Text>With a ...?</Text>
-              {this.renderPicker(this.state.categories,TEXT_CHOOSE_VIBE)}
-             
+                {this.renderPicker(this.state.locations, TEXT_EVERYWHERE)}
+                <Text>With a ...?</Text>
+                {this.renderPicker(this.state.categories, TEXT_CHOOSE_VIBE)}
+
               </Body>
             </CardItem>
           </Card>
 
-{this.showModal()}
+          {this.showModal()}
         </Content>
       </Container>
     );
@@ -175,26 +237,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 22
+    paddingTop: 22,
   },
   touchable: {
-     
+
     alignItems: 'center',
-   // justifyContent: 'center'
+    // justifyContent: 'center'
   },
-   view: {
+  view: {
     position: 'absolute',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
-    headerImageStyles:{
-              height: 120,
-              width: 100,
-              position: "relative",
-              alignSelf: "stretch",
-              top: 10
-            },
-   cardItem:{backgroundColor:"silver"},
-   item: {
+  headerImageStyles: {
+    height: 120,
+    width: 100,
+    position: 'relative',
+    alignSelf: 'stretch',
+    top: 10,
+  },
+  cardItem: {backgroundColor: 'silver'},
+  item: {
     padding: 10,
     fontSize: 18,
     height: 44,

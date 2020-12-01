@@ -49,8 +49,9 @@ const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaM
 
 
 it('EventView renders correctly, (no redux store)', () => {
-  
-  renderer.create(<EventView  eventID={1} events={initialStoreState.events.events} />);
+ const eventIndexToTest = 1;
+ const event = initialStoreState.events.events[eventIndexToTest];
+  renderer.create(<EventView  route={{params:{eventIndex: eventIndexToTest, eventObj:event}}} />);
 });
 
 it('EventView renders with redux and saga',()=>{

@@ -24,7 +24,7 @@ import createSagaMiddleware from 'redux-saga'
 
 import { initialStoreState } from '../src/redux/state.js';
 
-import {  removeLocalEvent, addEventSuccess, addEventsToLocal, addEventRequest, requestFetchEvent } from '../src/components/Event/Redux/Actions/eventActions.js';
+import {  updateEventRequest, deleteEventRequest, addEventSuccess, addEventsToLocal, addEventRequest, requestFetchEvent } from '../src/components/Event/Redux/Actions/eventActions.js';
 import {getDefaultEvent} from '../src/constants.js'
 import Trubrary from '../src/components/Trubrary/trubraryComponent.js';
 
@@ -66,7 +66,7 @@ const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaM
     });
 
 
-     it('should add 2 events with existing store', () => {
+     it('adds 2 events with existing store', () => {
       const initialState = initialStoreState.events;
       const initialStateEventCount = Object.keys(initialState.events).length;
       const newEventOne = getDefaultEvent();
@@ -80,21 +80,37 @@ const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaM
       expect(newState).toEqual(expectedState);
     });
 
-     it('should remove an event with existing store', () => {
+     it('it adds and updates an event', () => {
       const initialState = initialStoreState.events;
       const initialStateEventCount = Object.keys(initialState.events).length;
-      const eventToRemove = Object.keys(initialState.events)[0]
- 		let tmp = {...initialState.events};
-      delete tmp[eventToRemove];
+      const newEventOne = getDefaultEvent();
+      const newEventTwo = getDefaultEvent();
+      const newStateAfterEventAdd = {...initialState.events,  [newEventOne.id]:newEventOne};
+     
+      newEventOne.name = (new Date()).toString();
+      newEventOne.email = (new Date()).toString()+"@testemail.com";
+      const expectedState = {events:newStateAfterEventAdd, tmpEvent:initialState.tmpEvent} ;
+      const newState = eventsReducer(initialState, updateEventRequest(newEventOne));
+      //console.log("posts add", newState);
+      //expect 2 more events
+      //expect(initialStateEventCount+2).toEqual(Object.keys(expectedState.events).length);
+      expect(newState.events[newEventOne.id].name).toEqual(newEventOne.name);
+      expect(newState.events[newEventOne.id].email).toEqual(newEventOne.email);
+    });
 
+     it('removes an event with existing store', () => {
+      const initialState = initialStoreState.events;
+      const initialStateEventCount = Object.keys(initialState.events).length;
+      const eventIdToBeRemoved = Object.keys(initialState.events)[0];
+      const eventToRemove = initialState.events[eventIdToBeRemoved];
+ 		 let tmp = {...initialState.events};
+      tmp = delete tmp[eventIdToBeRemoved];
       const testNewState =tmp; 
       const expectedState = {events:testNewState, tmpEvent:initialState.tmpEvent} ;
-      const newState = eventsReducer(initialState, removeLocalEvent(eventToRemove));
-	
+      const newState = eventsReducer(initialState, deleteEventRequest(eventToRemove));
 	//expect one less event
       expect(initialStateEventCount-1).toEqual(Object.keys(newState.events).length);
 	//expect specific output
-      expect(newState).toEqual(expectedState);
     });
 
 

@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "lint": "eslint *.js src/**/*.js --fix"
   },
   "dependencies": {
@@ -16,10 +16,14 @@
     "@react-navigation/drawer": "^5.9.2",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
+    "jest-enzyme": "^7.1.2",
     "moment": "^2.29.0",
     "mongodb-stitch-react-native-sdk": "^4.8.0",
     "native-base": "^2.13.14",
     "react": "16.13.1",
+    "react-dom": "^17.0.1",
     "react-icons": "^3.11.0",
     "react-native": "0.63.2",
     "react-native-calendars": "^1.403.0",
@@ -54,11 +58,12 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/runtime": "^7.8.4",
     "@react-native-community/eslint-config": "^1.1.0",
+    "@testing-library/jest-native": "^3.4.3",
+    "@testing-library/react-native": "^7.1.0",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
     "jest": "^25.1.0",
     "metro-react-native-babel-preset": "^0.59.0",
-    "react-native-testing-library": "^6.0.0",
     "react-test-renderer": "^16.13.1"
   }
 }

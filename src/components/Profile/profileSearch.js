@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { StyleSheet, View, TextInput} from 'react-native';
 import { SwipeRow, Container, Header, Content, Title,  Thumbnail,Icon, Text,  Body, Right, Button } from 'native-base';
- import {deleteProfileRequest,fetchProfileRequest} from './Redux/Actions/profile.js'
+ import {removeLocalProfile, deleteProfileRequest,fetchProfileRequest} from './Redux/Actions/profile.js'
 import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACTIVE_TINT_COLOR, ROUTE_PROFILE_VIEW,
         COMMON_LISTVIEW_ITEM_SEPARATOR, GOOGLE_PROVIDER_NAME, ROUTE_YOUTUBELIST_VIEW, TEXT_VIEW,NO_PHOTO_AVAILABLE_URI,
         TEXT_ADD_ARTIST,ICON_IOS_CIRCLE,ICON_ANDROID_CIRCLE,ICON_ALL_TRASH,EMPTY_STRING,TRANSPARENT_COLOR, PLACEHOLDER_SEARCH_TEXT,
@@ -20,17 +20,12 @@ import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACT
   constructor(props) {
     super(props);
     //setting default state
-    this.state = { isLoading: true, text: EMPTY_STRING,   refreshing: false};
+    this.state = { isLoading: true, text: EMPTY_STRING,   refreshing: false, profiles:this.props.profiles};
      }
 
  _onRefresh = () => {
     this.setState({refreshing: true});
     this.props.fetchProfileRequest();
-  }
-
-  /** Loads profiles into the component */
-  componentDidMount() {
-          this.setState({ isLoading: false,  text: EMPTY_STRING})
   }
 
 /**
@@ -41,7 +36,6 @@ import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACT
   SearchFilterAndUpdateStateFunction(text) {
     //passing the inserted text from textinput to filter user's viewable events
    // const newData = this.SearchFilterFunction(text)
-
     //update state and re-render the list accordingly
     this.setState({ text: text });
   }
@@ -52,8 +46,11 @@ import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACT
  * @Rreturn events with the text parameter in part of it's data fields
  */
   SearchFilterFunction(text) {
+   const keys = Object.keys(this.props.profiles)
+ //console.log("profile search",keys.map(pkey => state.profiles[pkey]));
+    const profiles = keys.map(pkey => this.props.profiles[pkey]);
     //passing the inserted text in textinput
-    const newData = this.props.profiles.filter(function(item) {
+    const newData = profiles.filter(function(item) {
      if (!item) 
       { 
         console.log('Todo: Log this (Undefined Profiles from DB)');
@@ -81,21 +78,6 @@ import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACT
     _keyExtractor = (item, index) =>(item.id ? item.id.toString() : Math.floor(Math.random() * Math.floor(999999)));
 
 
-/** Navigate to artist-creation screen on [add] buttonpress  */
-  _onPress = (itemId) =>  this.props.navigation.navigate('Profile',{ params: { id: itemId } })
- //this.props.history.goForward();
-
-
-
-/** Navigate to artist-creation screen on [add] buttonpress  */
-  _onPressNew = () =>  this.props.navigation.navigate('Profile',{ params: { id: -1 } })
-
-
-
-/** Navigate to event-creation screen  */
-   _onPressDelete = (itemId) => {
-  this.props.deleteProfileRequest({id:itemId})
-  };
 
 /** The Search field */
 renderSearchField = () =>(
@@ -119,8 +101,12 @@ renderSearchField = () =>(
               <Thumbnail source={{uri:profile.item.imageURI||NO_PHOTO_AVAILABLE_URI}}/>
               <Text style={{flex:1, alignSelf:"center"}}>{profile.item.name}</Text>
               <View style={{flex:1}}>
-              <Button transparent  onPress={() => this._onPress(profile.item.id)} style={{flex:1,alignSelf:"flex-end"}}>
-                  <Text>{TEXT_VIEW}</Text>
+              <Button transparent  onPress={() =>this.props.navigation.navigate('Profile',{  profileIndex: profile.item.id,  profile:this.props.profiles[profile.item.id], role:profile.item.id} )} 
+                                    style={{flex:1,alignSelf:"flex-end"}}>
+                  <Text>{TEXT_VIEW}{profile.item.id}</Text>
+                </Button>
+                <Button transparent  onPress={() => this.props.deleteProfileRequest(profile.item.id)} style={{flex:1,alignSelf:"flex-end"}}>
+                  <Text>Delete{profile.item.id}</Text>
                 </Button>
                 </View >
                 </View>  
@@ -132,7 +118,7 @@ renderSearchField = () =>(
 */
   addButton = ()=>{
     const _addButton = this.props.canAddProfile 
-      ?  (<Button transparent  onPress={()=>this._onPressNew()} >
+      ?  (<Button transparent  onPress={()=>this.props.navigation.navigate('Profile', { profileIndex: -1, profiles:this.state.profiles, role:this.props.canAddProfile } )} >
              <Icon ios={ICON_IOS_CIRCLE} android={ICON_ANDROID_CIRCLE} style={COMMON_ICON_STYLE}/>
                <Text style={styles.textStyle}>{TEXT_ADD_ARTIST}</Text>
             </Button>)
@@ -143,10 +129,6 @@ renderSearchField = () =>(
 * Render component
 */
   render() {
-    if (this.state.isLoading) {
-      //Loading View while data is loading
-      return (COMMON_ACTIVITY_INDICATOR);
-    }
 
     return (
       <Container style={styles.viewStyle}>
@@ -195,19 +177,20 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const profileKeys = Object.keys(state.profiles.profiles);
-
+  const profiles = {};
+  profileKeys.forEach(pkey => profiles[pkey]=state.profiles.profiles[pkey])
   return {
-    canAddProfile : (state.auth!==1) && (state.auth.auth.loggedInProviderName===GOOGLE_PROVIDER_NAME),
-    profileIndex : (state.auth!==1) && (state.auth.auth.loggedInProviderName===GOOGLE_PROVIDER_NAME) ? state.auth.auth.userProfile.identities[0].id: null,
+    canAddProfile :true,// (state.auth!==1) && (state.auth.auth.loggedInProviderName===GOOGLE_PROVIDER_NAME),
+    profileIndex : (state.auth!==1) && (state.auth.auth.loggedInProviderName===GOOGLE_PROVIDER_NAME) ? state.auth.auth.userProfile.identities[0].id: 1,
     profileCount: profileKeys.length, 
-    profiles: profileKeys.map(pkey => state.profiles.profiles[pkey])
+    profiles: state.profiles.profiles
   }
 
 }
 
 
 function matchDispatchToProps(dispatch){
-  return bindActionCreators({fetchProfileRequest:fetchProfileRequest, deleteProfileRequest: deleteProfileRequest}, dispatch)
+  return bindActionCreators({fetchProfileRequest:fetchProfileRequest, deleteProfileRequest: removeLocalProfile}, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(SearchAndResultsScreen)

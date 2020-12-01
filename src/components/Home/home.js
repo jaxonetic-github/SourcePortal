@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux';
 
 import {PermissionsAndroid} from 'react-native';
 import Client from 'shopify-buy';
+import Profile from '../Profile/profileviewComponent.js';
 
 import { Link } from 'react-router';
 import withRouter from '../../withRouterManager.js';
@@ -19,7 +20,8 @@ import withRouter from '../../withRouterManager.js';
 /**
  * This is the home screen of the app. 
  * The content will be changing 
- //navigation.getParam('title', 'A Nested Details Screen')||"BAR",
+ * 
+ * navigation.getParam('title', 'A Nested Details Screen')||"BAR",
  */
 class Home extends React.Component {
 
@@ -31,7 +33,7 @@ class Home extends React.Component {
       selectedState: undefined,
       menuVisible: false,
     };
-   
+    console.log("Home Proops::",this.props.route.params.profile);
   }
 
 async componentDidMount() {
@@ -222,23 +224,16 @@ locations : LOCATION_LIST,categories:CATEGORY_LIST,
       <View style={{flex:1}}>
 <Card>
             <CardItem>
-                
-
               <Text>{TEXT_WHATS_GOING_ON}</Text>
-
               {this.renderPicker(this.state.locations, TEXT_EVERYWHERE)}
               <Text>With a ...?</Text>
-              {this.renderPicker(this.state.categories,TEXT_CHOOSE_VIBE)}
-             
-              
+              {this.renderPicker(this.state.categories,TEXT_CHOOSE_VIBE)}      
             </CardItem>
           </Card>
       </View>
 
       </Content>
      </Container>)};
-
-  
 }
 
 const styles = StyleSheet.create({
@@ -246,14 +241,15 @@ const styles = StyleSheet.create({
   videoRefsInnerView:{alignItems:"center", margin:5},
   videoRefsThumbnail:{borderRadius:15}, 
   pastPresFutureStyle:{flex:1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'},
-  touchable: {
-    alignItems: 'center',
-  },
+  touchable: {alignItems: 'center'},
    item: { padding: 10, fontSize: 18, height: 44},
 });
 
 
-const mapStateToProps = state => ({digitalResources: state.resourcesData.digitalResources,
-                                  videoReferencePromotions: state.videoMediaPromotions})
-
+const mapStateToProps = state =>{
+                         return {digitalResources: state.resourcesData.digitalResources,
+                                  videoReferencePromotions: state.videoMediaPromotions,
+                                route : {params: {  profileIndex: 1,  profile:state.profiles.profiles["1"], role:0 }}
+                                }}
+/**, loggedInUserProfile:{"only set from sidebar Settings"}**/
 export default connect(mapStateToProps, null)(Home)

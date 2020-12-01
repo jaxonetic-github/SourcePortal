@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
-import { Dimensions, StyleSheet, Image, View } from 'react-native';
-import { Container, Header, Content, DatePicker, Text } from 'native-base';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import React, {Component} from 'react';
+import {Dimensions, StyleSheet, Image, View} from 'react-native';
+import {Container, Header, Content, DatePicker, Text} from 'native-base';
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 
-
-let { width } = Dimensions.get('window');
-
+let {width} = Dimensions.get('window');
 
 export default class EventDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: {}
+      items: {},
     };
   }
 
@@ -34,8 +32,8 @@ export default class EventDetail extends Component {
         //    '2017-05-24': {startingDay: true, color: 'gray'},
         //    '2017-05-25': {color: 'gray'},
         //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-         // monthFormat={'yyyy'}
-         // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
+        // monthFormat={'yyyy'}
+        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
         //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
       />
     );
@@ -52,16 +50,18 @@ export default class EventDetail extends Component {
           for (let j = 0; j < numItems; j++) {
             this.state.items[strTime].push({
               name: 'Item for ' + strTime,
-              height: Math.max(50, Math.floor(Math.random() * 150))
+              height: Math.max(50, Math.floor(Math.random() * 150)),
             });
           }
         }
       }
       //console.log(this.state.items);
       const newItems = {};
-      Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
+      Object.keys(this.state.items).forEach((key) => {
+        newItems[key] = this.state.items[key];
+      });
       this.setState({
-        items: newItems
+        items: newItems,
       });
     }, 1000);
     // console.log(`Load Items for ${day.year}-${day.month}`);
@@ -69,13 +69,17 @@ export default class EventDetail extends Component {
 
   renderItem(item) {
     return (
-      <View style={[styles.item, {height: item.height}]}><Text>{item.name}</Text></View>
+      <View style={[styles.item, {height: item.height}]}>
+        <Text>{item.name}</Text>
+      </View>
     );
   }
 
   renderEmptyDate() {
     return (
-      <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
+      <View style={styles.emptyDate}>
+        <Text>This is empty date!</Text>
+      </View>
     );
   }
 
@@ -96,13 +100,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    marginTop: 17
+    marginTop: 17,
   },
   emptyDate: {
     height: 15,
-    flex:1,
-    paddingTop: 30
-  }
+    flex: 1,
+    paddingTop: 30,
+  },
 });
 
 /*

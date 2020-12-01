@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet,Image,View} from 'react-native';
+import { StyleSheet,Image,View,TextInput} from 'react-native';
 import { Container, Button,Separator,Thumbnail, Header, Content, ListItem,
  Text, Icon, Title, Left, Body, Right,Accordion,Item } from 'native-base';
-import { connect } from 'react-redux';
-import {  addEventsToLocal,addEventRequest, updateEventRequest } from './Redux/Actions/eventActions.js';
-import { bindActionCreators } from 'redux';
+//import { connect } from 'react-redux';
+//import {  addEventsToLocal,addEventRequest, updateEventRequest } from './Redux/Actions/eventActions.js';
+//import { bindActionCreators } from 'redux';
 import {UPDATE_EVENT_NAME_BY_KEY,UPDATE_EVENT_DESC_BY_KEY, UPDATE_EVENT_EMAIL_BY_KEY,UPDATE_EVENT_PHONE_BY_KEY, UPDATE_EVENT_WEBSITE_BY_KEY,UPDATE_EVENT_IMAGE_BY_KEY,
        ADD_EVENT, ADD_EVENT_NAME, ADD_EVENT_DESC, ADD_EVENT_EMAIL, ADD_EVENT_PHONE, ADD_EVENT_WEBSITE, ADD_EVENT_IMAGE} from '../../redux/types';
 import {getDefaultEvent, iconManager,COMMON_ICON_STYLE_SILVER, COMMON_ICON_STYLE,
-      ROUTE_SIMPLE_INPUT_VIEW,ROUTE_EVENT_CALENDAR,ROUTE_MAPVIEW,
+        ROUTE_SIMPLE_INPUT_VIEW,ROUTE_EVENT_CALENDAR,ROUTE_MAPVIEW,
         TEXT_WEBSITE,ICON_TAG_ARROW_RIGHT,ICON_TAG_LOCATION,ICON_TAG_CALENDAR,ICON_TAG_BACK,ICON_TAG_ADD_CIRCLE,
         ICON_TAG_CREATE, ICON_TAG_REMOVE_CIRCLE, ICON_TAG_PHONE,ICON_TAG_MAIL,ICON_TAG_GLOBE,ICON_TAG_DESCRIPTION,ICON_TAG_PERSON,
         ICON_IOS_PERSON, ICON_ANDROID_PERSON,TEXT_SAVE,ICON_IOS_CIRCLE,ICON_ANDROID_CIRCLE,ICON_ALL_ARROWFORWARD,
@@ -16,9 +16,9 @@ import {getDefaultEvent, iconManager,COMMON_ICON_STYLE_SILVER, COMMON_ICON_STYLE
         TEXT_PHONE,TRANSPARENT_COLOR, ICON_IOS_GLOBE, ICON_ANDROID_GLOBE,ICON_IOS_DESCRIPTION,ICON_ANDROID_DESCRIPTION, TEXT_DESCRIPTION,
         ICON_IOS_LOCATION, ICON_ANDROID_LOCATION, ICON_IOS_CALENDAR,ICON_ANDROID_CALENDAR,
         TEXT_NAME,COMMON_DARK_BACKGROUND,ICON_REMOVE_CIRCLE   } from '../../constants.js';
-import withRouter from '../../withRouterManager.js';
+//import withRouter from '../../withRouterManager.js';
 
-import SimpleInputEdit from "../simpleInput.js";
+import SimpleInputEdit from "../simpleInputComponent.js";
 import moment from 'moment';
 
 /**
@@ -29,77 +29,56 @@ import moment from 'moment';
 
   constructor(props) {
     super(props);
-    const tmpEvt = getDefaultEvent();
-let test;
+    let test;
+    let evtId = this.props.route.params.eventID || null;
+    const addEventRequest = this.props.addEventRequest || this.props.route.params.addEventRequest ;
+    const addEventsToLocal = this.props.addEventsToLocal || this.props.route.params.addEventsToLocal ;
+    const deleteEventRequest = this.props.deleteEventRequest || this.props.route.params.deleteEventRequest ;
+    const updateEventRequest = this.props.updateEventRequest || this.props.route.params.updateEventRequest;
+    const isNewEvent = this.props.isNewEvent || this.props.route.params.isNewEvent ;
+    const evtObject = this.props.eventObj || this.props.route.params.eventObj ;
     // This Component assumes an ID in eventID property or from a route
-    const update = this.props.eventID ;
-    //if no event props are passed in, create one.
-    test = (this.props.events == undefined) ?  {} : this.props.events;
-      this.props.events = test;
+    let update = (evtId != null);
 
-    if (!update && this.props.route )
-      {
-        update = this.props.route.params.params.id
-      }
-
-    if(!update)
+    if(isNewEvent)
     {
-      this.props.addEventRequest(tmpEvt);
-    //setting default state
-      this.state = {dataIndex:tmpEvt.id, text: ''};
-
-    }else{
-                this.state = {dataIndex:update, text: ''};
+      this.state = {dataIndex:evtObject.id, isNewEvent:true, eventObj:evtObject,  text: '', updateEventRequest:updateEventRequest, addEventRequest:addEventRequest};
+    }else{  
+        this.state = {dataIndex:evtObject.id, eventObj:evtObject,canUpdate:true, isNewEvent:false, text: '', updateEventRequest:updateEventRequest, addEventRequest:addEventRequest};
     }
-     }
 
-componentDidMount(){
- // const tmpEvt = getDefaultEvent();
- // this.props.addEventRequest(tmpEvt);
-//  this.setState({dataIndex:tmpEvt.id})
-}
+     }
 
 /**
  * Commit event data to backend
  */
   _saveEvent = () => {
-    //create Event object from userInfo
-    const tmpEvt = getDefaultEvent({ website:this.displayWebsite(), name:this.displayName(), phone:this.displayPhone(), email:this.displayEmail(),
-               description:this.props.description, imageURI:this.displayImageURI(), calendar: {year:moment(this.props.calendar).format('YYYY'), month:moment(this.props.calendar).format('MM'), day:moment(this.props.calendar).format('DD')},
-                location:this.props.location, 
-    locationInfo:{state:'NY', country:'USA', location:'1600 Pennsylvania Ave, Washington DC', longitude:-122, latitude:33},
-});
 
-    //Update when we have bogus dataIndex
-    if( this.state.dataIndex && this.state.dataIndex>-1 )
-      this.props.updateEventRequest(this.props.events[this.state.dataIndex]) 
+    if( this.state.isNewEvent) {
+            this.state.addEventRequest(this.state.eventObj);
+            this.setState({isNewEvent:null})
+    }
     else
-       this.props.addEventRequest(tmpEvt);
+       this.state.updateEventRequest(this.state.eventObj) 
   };
 
-displayName = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.props.events[this.state.dataIndex].name:this.props.name)
-displayPhone = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.props.events[this.state.dataIndex].phone:this.props.phone)
-displayWebsite = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.props.events[this.state.dataIndex].website:this.props.website)
-displayLocation = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.props.events[this.state.dataIndex].location:this.props.location)
-formatCalendarObject = (calendar) =>{
- return (calendar.year ? calendar.year+"-"+calendar.month+"-"+calendar.day : calendar)
-}
-displayCalendar = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.formatCalendarObject(this.props.events[this.state.dataIndex].calendar):this.formatCalendarObject(this.props.calendar))
-displayEmail = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.props.events[this.state.dataIndex].email:this.props.email)
-displayDescription = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.props.events[this.state.dataIndex].description:this.props.description)
-displayImageURI = () =>(this.state.dataIndex && this.props.events[this.state.dataIndex]?this.props.events[this.state.dataIndex].imageURI:this.props.imageURI)
+formatCalendarObject = (calendar) =>(calendar.year ? calendar.year+"-"+calendar.month+"-"+calendar.day : calendar);
+displayCalendar = () =>this.formatCalendarObject(this.state.eventObj.calendar);
 
 arrowIcon = ()=>this.props.isGoogleUser ? <Icon style={COMMON_ICON_STYLE}  name={ICON_ALL_ARROWFORWARD} /> : null;
   
   /**
-  * The "Edit" view for a particular widget
+  * 
   */
 _renderContent = (item) =>
     (<View style={{flex:1, alignItems:"center",backgroundColor:"silver", borderRadius:10}}>
-      <Text>{this.state.dataIndex}</Text>
-          <SimpleInputEdit inputType={ (this.state.dataIndex?item.updateAction: item.addAction)}
-                    profileIndex={ this.state.dataIndex} inputInitialValue={item.displayText }/>
- </View>)
+     <TextInput
+        style={styles.input}
+        value={item.displayText}
+        onChangeText={(text)=>{
+          const evtObject = this.state.eventObj;
+          evtObject[item.key.toLowerCase()] = text;
+          this.setState({eventObj:evtObject});}}/></View>)
 
 /**
  * A header view to display the profile data when not in "Edit" mode
@@ -107,37 +86,35 @@ _renderContent = (item) =>
     _renderHeader=(expanded,icon,iconsStyle,titleText,bodyText)=> 
             (<View key={titleText}  style={{flex:1,backgroundColor:"white"}}>
               <Item>
-             
               {iconManager(icon,styles.iconStyle )}
             <Text style={{color:"silver"}}>{titleText}</Text>
             </Item>
             <Text style={{flex:1,alignSelf:"center",justifyContent:"center",backgroundColor:"white"}}>{bodyText}</Text>
-
           </View>)
          //    {expanded ?
          //      iconManager(icon,{fontSize: 20, color: 'silver', flex:1, alignSelf:"flex-end"} ):
          //                iconManager(ICON_TAG_CREATE,{fontSize: 20, color: 'silver', position:"absolute", right:5, top:20} )
          // }
   render() {
-  const profileData= [
+  const eventData= [
     {key:TEXT_NAME,titleText:TEXT_NAME, icon:ICON_TAG_PERSON, icon_ios:ICON_IOS_PERSON,icon_droid:ICON_ANDROID_PERSON,
      updateAction:UPDATE_EVENT_NAME_BY_KEY, addAction:ADD_EVENT_NAME,
-      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.displayName(), actionIcon:this.arrowIcon() },
+      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.state.eventObj.name, actionIcon:this.arrowIcon() },
     {key:TEXT_MAIL,titleText:TEXT_MAIL, icon:ICON_TAG_MAIL, icon_ios:ICON_IOS_MAIL,icon_droid:ICON_ANDROID_MAIL,
       updateAction:UPDATE_EVENT_EMAIL_BY_KEY, addAction:ADD_EVENT_EMAIL,
-      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.displayEmail(), actionIcon:this.arrowIcon() },
+      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.state.eventObj.email, actionIcon:this.arrowIcon() },
     {key:TEXT_PHONE,titleText:TEXT_PHONE, icon:ICON_TAG_PHONE, icon_ios:ICON_IOS_PORTRAIT,icon_droid:ICON_ANDROID_PORTRAIT,
       updateAction:UPDATE_EVENT_PHONE_BY_KEY, addAction:ADD_EVENT_PHONE,
-      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.displayPhone(), actionIcon:this.arrowIcon() },
+      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.state.eventObj.phone, actionIcon:this.arrowIcon() },
     {key:TEXT_WEBSITE,titleText:TEXT_WEBSITE, icon:ICON_TAG_GLOBE,icon_ios:ICON_IOS_GLOBE,icon_droid:ICON_ANDROID_GLOBE,
            updateAction:UPDATE_EVENT_WEBSITE_BY_KEY, addAction:ADD_EVENT_WEBSITE,
-      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.displayWebsite(), actionIcon:this.arrowIcon() },
+      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.state.eventObj.website, actionIcon:this.arrowIcon() },
     {key:TEXT_DESCRIPTION,titleText:TEXT_DESCRIPTION,icon:ICON_TAG_DESCRIPTION, icon_ios:ICON_IOS_DESCRIPTION,icon_droid:ICON_ANDROID_DESCRIPTION,
       updateAction:UPDATE_EVENT_DESC_BY_KEY, addAction:ADD_EVENT_DESC,
-      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.displayDescription(), actionIcon:this.arrowIcon() }
+      iconStyle:COMMON_DARK_BACKGROUND,displayText:this.state.eventObj.description, actionIcon:this.arrowIcon() }
       ];
 
- const items = profileData.map((record, index)=>{
+ const items = eventData.map((record, index)=>{
     return (<Accordion  key={record.key}
                       style={{ paddingBottom:15, paddingTop:5}}
                   dataArray={[record]}
@@ -147,8 +124,7 @@ _renderContent = (item) =>
           const title = item;
           //console.log(expanded, "\n--^^^^^^^^*******&&&&&&&&--\n", item);
             return (    
-              this._renderHeader(expanded,item.icon, COMMON_ICON_STYLE, item.titleText, item.displayText,
-                  item.displayText,null )
+              this._renderHeader(expanded,item.icon, COMMON_ICON_STYLE, item.titleText, item.displayText, item.displayText,null )
             );
           }}/>);
  });
@@ -160,8 +136,8 @@ return (
           <Body><Title>Event {this.state.dataIndex}</Title></Body>
           <Right>             
             <Button transparent  onPress={() => this._saveEvent()} >
-             {iconManager(ICON_TAG_ADD_CIRCLE,COMMON_ICON_STYLE)}
-             <Text>{TEXT_SAVE}</Text>
+             {iconManager(ICON_TAG_ADD_CIRCLE, COMMON_ICON_STYLE)}
+             <Text>{this.state.isNewEvent? TEXT_SAVE : "Updateee"}</Text>
             </Button>
           </Right>
         </Header>
@@ -176,10 +152,10 @@ return (
               <Text>Location</Text>
             </Left>
             <Body>
-              <Text>{this.displayLocation()}</Text>
+              <Text>{this.state.eventObj.location}</Text>
             </Body>
             <Right>   
-                 <Button transparent title="Event Location" onPress={() => this.props.navigation.navigate("MapView",{key:this.state.dataIndex, initialLocation:this.displayLocation()})} >
+                 <Button transparent title="Event Location" onPress={() => this.props.navigation.navigate("MapView",{key:this.state.dataIndex, initialLocation:this.state.eventObj.location})} >
                 {iconManager(ICON_TAG_ARROW_RIGHT,COMMON_ICON_STYLE)}
                  </Button>
             </Right>
@@ -216,7 +192,17 @@ return (
 
 
 const styles = StyleSheet.create({
- 
+   input: {
+    width: 350,
+    height: 55,
+    backgroundColor: '#42A5F5',
+    margin: 10,
+    padding: 8,
+    color: 'white',
+    borderRadius: 14,
+    fontSize: 18,
+    fontWeight: '500',
+  },
     iconStyle:COMMON_ICON_STYLE,
     containerStyle:{backgroundColor: COMMON_DARK_BACKGROUND},
     headerStyle:{backgroundColor: COMMON_DARK_BACKGROUND, height:55, color:"white"},

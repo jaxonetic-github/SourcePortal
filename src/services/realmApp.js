@@ -1,9 +1,8 @@
-
-import {REMOTE_RESOURCE_STRING} from  '../constants.js'
+import {REMOTE_RESOURCE_STRING} from '../constants.js';
 
 /**
-*  This CrudService is for the MongoDB Stitch Backend.
-*/
+ *  This CrudService is for the MongoDB Stitch Backend.
+ */
 import Realm from 'realm';
 import React, {useContext, useState} from 'react';
 
@@ -11,42 +10,38 @@ let app;
 let anonymousUser;
 let AuthContext;
 let context;
-let anonymousCredential
+let anonymousCredential;
 
 // Returns the shared instance of the Realm app.
 export function getRealmApp() {
   if (app === undefined) {
-
     const appId = REMOTE_RESOURCE_STRING; // Set Realm app ID here.
 
     const appConfig = {
       id: appId,
       timeout: 10000,
- /*     app: {
+      /*     app: {
         name: 'default',
         version: '0',
       },*/
     };
-    console.log(app,"getRealmApp",appId);
+    console.log(app, 'getRealmApp', appId);
     app = new Realm.App(appConfig);
   }
-
 }
-
 
 // Returns the shared instance of the Realm app.
 export function getAnonymousCredential() {
   if (anonymousCredential === undefined) {
-     anonymousCredential = Realm.Credentials.anonymous();
+    anonymousCredential = Realm.Credentials.anonymous();
   }
   return anonymousCredential;
 }
 
-
 // Returns the shared instance of the Realm app.
 export function getAuthContext() {
   if (context === undefined) {
-    context =  React.createContext(null);
+    context = React.createContext(null);
   }
   return context;
 }
@@ -85,7 +80,7 @@ const AuthProvider = ({children}) => {
     await app.emailPasswordAuth.registerUser(email, password);
   };
 
- var AuthContext = getAuthContext();
+  var AuthContext = getAuthContext();
 
   return (
     <AuthContext.Provider
@@ -100,7 +95,6 @@ const AuthProvider = ({children}) => {
   );
 };
 
-
 // The useAuth hook can be used by components under an AuthProvider to access
 // the auth context value.
 const useAuth = () => {
@@ -112,4 +106,3 @@ const useAuth = () => {
 };
 
 export {AuthProvider, useAuth};
-

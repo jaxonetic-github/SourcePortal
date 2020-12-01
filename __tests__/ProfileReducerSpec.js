@@ -56,7 +56,7 @@ const rootReducer = combineReducers({profiles: profilesReducer,  auth: authReduc
       const newProfile = getDefaultProfile();
       const testNewState = {...initialState.profiles,  [newProfile.id]:newProfile};
       const expectedState = {profiles:testNewState, tmpProfile:initialState.tmpProfile} ;
-      const newState = profilesReducer(initialState, addProfile([newProfile]));
+      const newState = profilesReducer(initialState, addProfile(newProfile));
 
       expect(newState).toEqual(expectedState);
     });
@@ -67,13 +67,14 @@ const rootReducer = combineReducers({profiles: profilesReducer,  auth: authReduc
       const initialStateProfileCount = Object.keys(initialState.profiles).length;
       const newProfileOne = getDefaultProfile();
       const newProfileTwo = getDefaultProfile();
-      const testNewState = {...initialState.profiles,  [newProfileOne.id]:newProfileOne,  [newProfileTwo.id]:newProfileTwo};
-      const expectedState = {profiles:testNewState, tmpProfile:initialState.tmpProfile} ;
-      const newState = profilesReducer(initialState, addProfile([newProfileTwo,newProfileOne]));
-     
+      const testNewProfilesState = {...initialState.profiles,  [newProfileOne.id]:newProfileOne,  [newProfileTwo.id]:newProfileTwo};
+      const expectedState = {profiles:testNewProfilesState, tmpProfile:initialState.tmpProfile} ;
+      const afterAddOneState = profilesReducer(initialState, addProfile(newProfileOne));
+        const afterAddTwoState = profilesReducer(afterAddOneState, addProfile(newProfileTwo));
+
       //expect 2 more profiles
-      expect(initialStateProfileCount+2).toEqual(Object.keys(expectedState.profiles).length);
-      expect(newState).toEqual(expectedState);
+      expect(initialStateProfileCount+2).toEqual(Object.keys(afterAddTwoState.profiles).length);
+      expect(afterAddTwoState).toEqual(expectedState);
     });
 
      it('should remove an profile with existing store', () => {

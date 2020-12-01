@@ -9,10 +9,10 @@ import { SwipeRow,Container, Header, Content,Title,Icon,
 Picker, Thumbnail, Text, Body, Right, Button, Toast } from 'native-base';
 import {deleteEventRequest, addEventsToLocal,addEventRequest} from './Redux/Actions/eventActions.js'
 import {COMMON_ACTIVITY_INDICATOR, NO_PHOTO_AVAILABLE_URI, COMMON_DARK_BACKGROUND,ACTIVE_TINT_COLOR, INACTIVE_TINT_COLOR,
-ROUTE_EVENT_VIEW, TEXT_DELETE,EMPTY_STRING, TRANSPARENT_COLOR,ICON_ALL_TRASH,
+ROUTE_EVENT_VIEW, TEXT_DELETE,EMPTY_STRING, TRANSPARENT_COLOR,ICON_ALL_TRASH, TEXT_NEW_EVENT,
 GOOGLE_PROVIDER_NAME, LIST_SWIPELEFT_OPENVALUE, LIST_SWIPERIGHT_OPENVALUE, PLACEHOLDER_SEARCH_TEXT, TEXT_VIEW,
 COMMON_LISTVIEW_ITEM_SEPARATOR,NEED_AT_LEAST_ANONYMOUS_LOGIN,ICON_IOS_CIRCLE,ICON_ANDROID_CIRCLE,
-STATES,ICON_TAG_EDIT,COMMON_ICON_STYLE_MAROON, iconManager } from '../../constants.js'
+STATES,ICON_TAG_EDIT,COMMON_ICON_STYLE_MAROON, iconManager, getDefaultEvent } from '../../constants.js'
 import CalendarView from '../calendarView';
 
 /**
@@ -23,11 +23,13 @@ import CalendarView from '../calendarView';
   constructor(props) {
     super(props);
     //setting default state
-    this.state = { isLoading: true, text: EMPTY_STRING, location:"All"};
+    const canAddEvent = this.props.canAddEvent || (this.props.route && this.props.route.params.canAddEvent);
+    this.state = { canAddEvent:canAddEvent, isLoading: true, text: EMPTY_STRING, location:"All"};
   }
 
   /** Loads events into the component */
   componentDidMount() {
+    console.log("EVVTSEARCH componentDidMount=>",this.props.events["59059"]);
     this.setState({ isLoading: false});
   }
 
@@ -56,9 +58,11 @@ import CalendarView from '../calendarView';
    const formatCalendarObject = (calendar) =>{
       const aux = (calendar.year ? calendar.year+"-"+calendar.month+"-"+calendar.day : calendar)
       return aux;
-}
+    }
+
+    //Object.keys( this.props.events).forEach(([key, value])=>{})
     //passing the inserted text in textinput
-    const newData = this.props.events.filter(function(item) {
+    const newData = Object.entries( this.props.events).filter(function(item) {
 
       //applying filter for the inserted text in search bar
       const name = item.name ? item.name.toUpperCase() : ''.toUpperCase();
@@ -83,17 +87,18 @@ import CalendarView from '../calendarView';
 
 /** Navigate to event-creation screen  */
    _onPress = (itemId) => {
-    console.log(itemId, this);
-console.log("onPress==>"+ROUTE_EVENT_VIEW+"/"+itemId);
- this.props.navigation.navigate('Event',{ params: { id: itemId } });//this.props.history.push(ROUTE_EVENT_VIEW+"/"+itemId );
+   // console.log(itemId, this);
+console.log(this.props.events[itemId],"onPress==>"+ROUTE_EVENT_VIEW+"/"+itemId);
+ this.props.navigation.push('Event',{ eventIndex: itemId, eventObj:this.props.events[itemId] });//this.props.history.push(ROUTE_EVENT_VIEW+"/"+itemId );
   };
+
+
   /* Navigate to artist-creation screen on [add] buttonpress  */
   _onPressNew =async () => {
-        
-//add a new local event
-//const tst= await this.props.addEventRequest(tmpEvt);
-//go to the detail of that local event
-    this.props.history.push(ROUTE_EVENT_VIEW);
+   const newEvt = getDefaultEvent();
+
+    //go to the detail of new  event
+    this.props.navigation.push("Event",{isNewEvent:true, eventObj:newEvt});
   }
 
 //onPress={() => this.props.navigation.push('EventView', { })} 
@@ -105,7 +110,7 @@ console.log("onPress==>"+ROUTE_EVENT_VIEW+"/"+itemId);
 /**
   * A component to display a summary of an individual event from the list of events
   * available to the component
-  * @param {object} item - event Data item
+  * @param {index, item, separators} item - item.item expectected to be [eventId, eventObject]
   */
 _renderItem = (item) => { 
  const formatCalendarObject = (calendar) =>{
@@ -113,12 +118,12 @@ _renderItem = (item) => {
 }
   return(
               <View style={styles.viewStyle}>
-              <Pressable onPress={()=>this._onPress(item.item.id )}>
+              <Pressable onPress={()=>this._onPress(item.item[0])} onLongPress={()=>this._onPressDelete(item.item[0])} >
               <Thumbnail source={{uri:/*item.item.imageURI||*/NO_PHOTO_AVAILABLE_URI}}/>
               <View style={styles.innerViewStyle}>
-                  <Title style={styles.rightText} >{item.item.name}</Title>
-                  <Text style={styles.rightText} >{formatCalendarObject(item.item.calendar)}</Text>
-               <Text note numberOfLines={2}>{item.item.description}</Text>
+                  <Title style={styles.rightText} >{item.item[1].name}</Title>
+                  <Text style={styles.rightText} >{formatCalendarObject(item.item[1].calendar)}</Text>
+                  <Text note numberOfLines={2}>{item.item[1].description}</Text>
               </View>
               </Pressable>
               </View>
@@ -129,10 +134,10 @@ _renderItem = (item) => {
 * 
 */
   addButton = ()=>{
-    const _addButton = this.props.isGoogleUser 
+    const _addButton = this.state.canAddEvent
       ?  (<Button transparent  onPress={()=>this._onPressNew()} >
              <Icon ios={ICON_IOS_CIRCLE} android={ICON_ANDROID_CIRCLE} style={{fontSize: 20, color: INACTIVE_TINT_COLOR}}/>
-               <Text style={styles.textStyle}></Text>
+               <Text style={styles.textStyle}>{TEXT_NEW_EVENT}</Text>
             </Button>)
       : null;
       return _addButton; }
@@ -161,7 +166,12 @@ renderSearchField = () =>(
       //Loading View while data is loading
       return (COMMON_ACTIVITY_INDICATOR );
     }
-  const locations = this.props.events.map((event)=>(<Picker.Item key={event.id} label={event.location} value={event.location} />));
+  
+  const locations = ()=>{ 
+   // console.log("Locations::", this.props.events);
+    return Object.entries( this.props.events).forEach((event)=>(<Picker.Item key={event.id} label={event.location} value={event.location} />));
+  };
+   
   const states = STATES.states.map((event)=>(<Picker.Item key={event} label={event} value={event} />));
   const months = [{key:"01", label:"january"},{key:"02", label:"february"},{key:"03", label:"march"},{key:"04", label:"april"},
                   {key:"05", label:"may"},{key:"06", label:"june"},{key:"07", label:"july"},{key:"08", label:"august"},
@@ -194,7 +204,7 @@ renderSearchField = () =>(
               selectedValue={this.state.location}
               onValueChange={this.onLocationChange.bind(this)} >
             <Picker.Item key={"All"} label={"Search By Locations"} value={"All"} />
-             {locations}
+             {locations()}
             </Picker> 
         <FlatList
             leftOpenValue={LIST_SWIPELEFT_OPENVALUE}
@@ -220,15 +230,15 @@ const mapStateToProps = state => {
   const isConnected =  ((state.auth!== NEED_AT_LEAST_ANONYMOUS_LOGIN) && state.auth.auth &&  (state.auth.auth.loggedInProviderName===GOOGLE_PROVIDER_NAME));
 const isGoogleUser = (isConnected && state.auth.auth.userProfile.identities[0].id);
   
-console.log(isGoogleUser, "--",isConnected, "--",state.auth.auth.userProfile);
+console.log("mapStateToProps=>", Object.entries( state.events.events).filter((entry)=>entry.id==="59059"));
   return {
     isConnected : isConnected,
     isGoogleUser: (isConnected && state.auth.auth.userProfile.identities[0].id),
-
-        canAddEvent : (state.auth!==1) && (state.auth.auth.loggedInProviderName==={GOOGLE_PROVIDER_NAME}),
+    events:state.events.events,
+    canAddEvent : true, //(state.auth!==1) && (state.auth.auth.loggedInProviderName==={GOOGLE_PROVIDER_NAME}),
 
     eventCount: eventKeys.length, 
-    events: eventKeys.map(pkey => state.events.events[pkey])
+
   }
 
 }
@@ -245,7 +255,7 @@ const styles = StyleSheet.create({
   },
 innerHeaderStyle:{backgroundColor: COMMON_DARK_BACKGROUND},height:50,
   textStyle: {
-    padding: 10, color:ACTIVE_TINT_COLOR
+    padding: 1, color:ACTIVE_TINT_COLOR
   },
   innerViewStyle:{margin:5,padding:5, borderRadius:20,alignSelf:"flex-end", position:"absolute", top:0},
 bodyViewStyle:{flex:1},

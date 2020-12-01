@@ -1,7 +1,7 @@
 /**
 *  TODO:  Documentation
 */
-import {REMOVE_LOCAL_PROFILE, FETCH_PROFILE_SUCCESS, FETCH_PROFILE_FAILURE, FETCH_PROFILE_REQUEST, ADD_NAME,
+import {UPDATE_PROFILE, REMOVE_LOCAL_PROFILE, FETCH_PROFILE_SUCCESS, FETCH_PROFILE_FAILURE, FETCH_PROFILE_REQUEST, ADD_NAME,
  ADD_PROFILE_REQUEST, ADD_PROFILE_SUCCESS, ADD_PROFILE_FAILURE, DELETE_PROFILE_SUCCESS,DELETE_PROFILE_FAILURE,DELETE_PROFILE_REQUEST,
  ADD_DESC, ADD_EMAIL, ADD_PHONE, ADD_WEBSITE, ADD_IMAGE,ADD_PROFILE_TO_USERPROFILES,
 UPDATE_PROFILE_NAME_BY_KEY, UPDATE_PROFILE_WEBSITE_BY_KEY, UPDATE_PROFILE_PHONE_BY_KEY, UPDATE_PROFILE_EMAIL_BY_KEY,UPDATE_PROFILE_IMAGE_BY_KEY,
@@ -43,8 +43,12 @@ export function updateProfileFailure(updatedEventError) {
   return { type: UPDATE_PROFILE_FAILURE, payload:updatedEventError }
 }
 
-export function updateProfileRequest(updatedEvent) {
-  return { type: UPDATE_PROFILE_REQUEST, payload:updatedEvent }
+export function updateProfileRequest(updatedProfile) {
+  return { type: UPDATE_PROFILE_REQUEST, payload:updatedProfile }
+}
+
+export function updateProfile(updatedProfile) {
+  return { type: UPDATE_PROFILE, payload:updatedProfile }
 }
 
 export function addProfileName(text) {
@@ -101,6 +105,7 @@ export function deleteProfileSuccess(results) {
 
 
 export function addProfileRequest(profile) {
+  console.log("addprofilerequest::", profile);
   return { type: ADD_PROFILE_REQUEST, payload:profile }
 }
 export function addProfileSuccess(profileSuccess) {

@@ -135,7 +135,7 @@ const results = yield call(service.deleteEvent, action.payload);
   
    yield put(deleteEventSuccess(results.deletedCount ))
 //FOR NOW update store by requesting fresh events list from db, todo: Stitch watcher 
-   yield put(removeLocalEvent(action.payload));
+   //yield put(removeLocalEvent(action.payload));
    
         }else {
           //-1 delete count???

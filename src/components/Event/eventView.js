@@ -8,16 +8,7 @@ import eventViewComponent from './eventViewComponent.js';
 
 const mapStateToProps = state => {
   return {
-    events: state.events.events,
-    email: state.events.tmpEvent.email,
-    name: state.events.tmpEvent.name,
-    phone: state.events.tmpEvent.phone,
-    website: state.events.tmpEvent.website,
-    location: state.events.tmpEvent.location,
-    calendar: state.events.tmpEvent.calendar,
-
-    description: state.events.tmpEvent.description,
-    imageURI: state.events.tmpEvent.imageURI
+   
   }
 }
 

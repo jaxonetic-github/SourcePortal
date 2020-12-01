@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { TextInput, StyleSheet } from 'react-native'
+import React, {Component} from 'react';
+import {TextInput, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 
 /**
@@ -7,46 +7,49 @@ import PropTypes from 'prop-types';
  *
  */
 export default class Input extends Component {
-/**
-     * Create an input field.
-     * @param {string} inputInitialValue - the inital value for the input.
-     */
- constructor(props) {
+  /**
+   * Create an input field.
+   * @param {string} inputInitialValue - the inital value for the input.
+   */
+  constructor(props) {
     super(props);
-    this.state = { text: props.inputInitialValue, inputType:props.inputType }
-  }    
+    this.state = {text: props.inputInitialValue, inputType: props.inputType};
+  }
 
   /** Updates the input field as the user types
    * @param {string} text - the user input
    */
-  onChangeText = (text) => { console.log(text);
-    this.setState({text:text})}
+  onChangeText = (text) => {
+    console.log(text);
+    this.setState({text: text});
+  };
 
-onBlur = ()=>{
- const {onInputBlur} = this.props
-   console.log(this.props,'new blurring-->',this.state.text)
-   this.props.updateChange(this.state.text)
-if(onInputBlur){
-  onInputBlur(this.state.text)
-  console.log('new address to lookup-->',this.state.text)
-}
-}
+  onBlur = () => {
+    const {onInputBlur} = this.props;
+    console.log(this.props, 'new blurring-->', this.state.text);
+    this.props.updateChange(this.state.text);
+    if (onInputBlur) {
+      onInputBlur(this.state.text);
+      console.log('new address to lookup-->', this.state.text);
+    }
+  };
   /** Method to handle the case when the user has finished editing field*/
   onSubmitEditing = () => {
-    const {updateChange} = this.props
-    if(updateChange){
-    const {text} = this.state
+    const {updateChange} = this.props;
+    if (updateChange) {
+      const {text} = this.state;
 
-    if (!text) return // Don't submit if empty
+      if (!text) {
+        return;
+      } // Don't submit if empty
 
-    updateChange(text)
-}
+      updateChange(text);
+    }
     //this.setState({text: ''})
-  }
+  };
 
-  render() { 
-    const {text} = this.state
-
+  render() {
+    const {text} = this.state;
     return (
       <TextInput
         style={styles.input}
@@ -54,12 +57,11 @@ if(onInputBlur){
         onChangeText={this.onChangeText}
         onSubmitEditing={this.onSubmitEditing}
         placeHolder={this.state.inputType}
-        onBlur={() => this.onBlur() }
+        onBlur={() => this.onBlur()}
       />
-    )
+    );
   }
 }
-
 
 const styles = StyleSheet.create({
   input: {
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
-
+    alignItems: 'center',
+  },
+});
