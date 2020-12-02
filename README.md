@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/jaxonetic-github/SourcePortal.svg?branch=main)](https://travis-ci.com/jaxonetic-github/SourcePortal)
 
-#### This repo is still in active development. (06/27/2019)
-Please keep this in mind when reviewing this repo that there are many details that I haven't tackled YET; in other words, it's not a finished project.  It does include many important modern development techniques like continuous integration and development, communicating with multiple third party services (i.e. googlesignin), and redux sagas(generator functions).  
+### How build and run
+<img src="https://github.com/jaxonetic-github/react-native-mongodb-stitch/blob/master/images/ios_demo.gif" align="left" height="300" width="170" >
 
 ### Architecture
 [Mongo Stitch Atlas Cloud](https://www.mongodb.com/cloud/stitch) for the backend as a new and cloud alternative to Google Cloud or AWS. 
