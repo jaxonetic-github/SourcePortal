@@ -1,8 +1,5 @@
 [![Build Status](https://travis-ci.com/jaxonetic-github/SourcePortal.svg?branch=main)](https://travis-ci.com/jaxonetic-github/SourcePortal)
 
-### How build and run
-<img src="https://github.com/jaxonetic-github/react-native-mongodb-stitch/blob/master/images/ios_demo.gif" align="left" height="300" width="170" >
-
 ### Architecture
 [Mongo Stitch Atlas Cloud](https://www.mongodb.com/cloud/stitch) for the backend as a new and cloud alternative to Google Cloud or AWS. 
 React Native for the front end 
@@ -31,7 +28,6 @@ cd ios && pod install
 cd ..
 react-native run-ios 
 ```
-
 <hr/>
 
 ##### Android
@@ -39,5 +35,5 @@ react-native run-ios
 yarn start
 react-native run-android
 ```
-
 <hr/>
+<img src="https://github.com/jaxonetic-github/react-native-mongodb-stitch/blob/master/images/ios_demo.gif" align="left" height="300" width="170" >
