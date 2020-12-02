@@ -75,51 +75,7 @@ const eventReducer = (state=eventStateSkeleton, action) => {
          error :"No key specified"
        }
       }
-    case UPDATE_EVENT_LOCATION_BY_KEY:
-      if(action.key)
-      {
-        //get a copy of all of the events in state
-        let _tmpEvents = {...state.events};
-        //update the name field of the event specified by key
-        _tmpEvents[action.key].location = action.payload;
-        _tmpEvents[action.key].hasBeenModifiedLocally = true;
-
-        return {
-       tmpEvent:{...state.tmpEvent},
-         events:{..._tmpEvents}
-      };
-      }else
-      {
-
-        return {
-         tmpEvent:{...state.tmpEvent, email:action.payload },
-         events:{...state.events},
-         error :"No key specified"
-       }
-      }
-    case UPDATE_EVENT_NAME_BY_KEY:
-      if(action.key)
-      {
-        //get a copy of all of the events in state
-        let _tmpEvents = {...state.events};
-        //update the name field of the event specified by key
-        _tmpEvents[action.key].name = action.payload;
-        _tmpEvents[action.key].hasBeenModifiedLocally = true;
-
-        return {
-       tmpEvent:{...state.tmpEvent},
-         events:{..._tmpEvents}
-      };
-      }else
-      {
-
-        return {
-         tmpEvent:{...state.tmpEvent, email:action.payload },
-         events:{...state.events},
-         error :"No key specified"
-       }
-      }
-     case UPDATE_EVENT_WEBSITE_BY_KEY:
+      case UPDATE_EVENT_WEBSITE_BY_KEY:
       if(action.key)
       {
         //get a copy of all of the events in state
