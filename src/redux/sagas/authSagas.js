@@ -1,14 +1,13 @@
 
   import React from 'react'
-import {NativeEventEmitter,NativeModules,  Button, StyleSheet, Text, View } from 'react-native';
+//import {NativeEventEmitter,NativeModules,  Button, StyleSheet, Text, View } from 'react-native';
  import { call, all,put, takeEvery, take, fork,putResolve } from 'redux-saga/effects'
 import {REMOVE_LOCAL_EVENT,REMOVE_LOCAL_PROFILE, ADD_PROFILE_REQUEST,ADD_PROFILE_FAILURE, ADD_PROFILE_SUCCESS,DELETE_PROFILE_SUCCESS,DELETE_PROFILE_FAILURE,DELETE_PROFILE_REQUEST,
  FETCH_PROFILE_SUCCESS, FETCH_PROFILE_FAILURE,FETCH_PROFILE_REQUEST,DELETE_EVENT_SUCCESS,DELETE_EVENT_FAILURE,
  DELETE_EVENT_REQUEST,FETCH_EVENT_REQUEST , FETCH_EVENT_SUCCESS, LOGOUT_USER_FAILURE,
 FETCH_EVENT_FAILURE,LOGIN_SUCCESS,LOGIN_FAILURE, LOGIN_USER_REQUEST, LOGOUT_USER,
       GOOGLE_SIGNOUT, GOOGLE_SIGNIN_REQUEST,GOOGLE_SIGNIN_SUCCESS, UPDATE_PROFILE_REQUEST,UPDATE_EVENT_REQUEST, 
-      ADD_PROFILE_TO_USERPROFILES, ADD_EVENTS_TO_USEREVENTS, ADD_EVENT_REQUEST, ADD_EVENT_SUCCESS, ADD_EVENT_FAILURE ,
-    GOOGLE_SERVERAUTHCODE_RECEIVED} from '../types.js';
+       ADD_EVENT_REQUEST } from '../types.js';
     
 import {loginFailed, loginSucceeded,loginUserRequest,dbClientInitialized, dbClientAlreadyInitialized } from '../../components/Authentication/Redux/Actions/authActions.js';
  
@@ -18,6 +17,61 @@ import { deleteProfileSuccess,updateProfileSuccess,updateProfileFailure,fetchPro
 import ServicesManager from '../../services/servicesManager'
 import {googleAuthenticationPress, _onPressLogout,googleSilentLogin} from './googleSaga'
 import {resourceData, REMOTE_RESOURCE_STRING} from '../../constants.js'
+
+/**
+* actionWatcher : Spawns the generator fuctions that listens for actions
+* @param service: a DAO object
+*/
+export function* actionWatcher(service) {
+     yield takeEvery(LOGIN_USER_REQUEST, authorizeUser,service);
+  yield takeEvery(GOOGLE_SIGNOUT, logout,service);
+  yield takeEvery(LOGIN_SUCCESS, _onAuthSucess, service);
+  yield takeEvery (GOOGLE_SIGNIN_REQUEST, googleAuthenticationPress,service,false )
+   yield takeEvery(ADD_PROFILE_REQUEST, insertProfile, service.stitchCrudServices);
+   yield takeEvery(ADD_EVENT_REQUEST, insertEvent, service.stitchCrudServices);
+   yield takeEvery(UPDATE_EVENT_REQUEST, updateEvent, service.stitchCrudServices);
+   yield takeEvery(UPDATE_PROFILE_REQUEST, updateProfile, service.stitchCrudServices);
+   yield takeEvery(FETCH_PROFILE_REQUEST, fetchProfiles, service.stitchCrudServices);
+   yield takeEvery(FETCH_EVENT_REQUEST, fetchEvents, service.stitchCrudServices);
+   yield takeEvery(DELETE_EVENT_REQUEST, deleteEvent, service.stitchCrudServices);
+   yield takeEvery(DELETE_PROFILE_REQUEST, deleteProfile, service.stitchCrudServices);
+}
+
+/** only export the rootSaga
+ *  single entry point to start all Sagas at once
+ */
+export  function* rootSaga() {
+  let authUser;
+  const service =  new ServicesManager();
+
+yield service.initialize(REMOTE_RESOURCE_STRING)
+//  yield service.authListen();
+
+try{
+    authUser = yield call(authorizeUser, service);
+
+    if(!authUser){
+      authUser = yield service.dbServices.authorizeAnonymously();
+    }
+
+    if(authUser.isLoggedIn){
+
+    //start listening  for actions
+    yield fork(actionWatcher, service);
+
+    //retrieve data from backend
+    yield call(  _onAuthSucess, service); 
+}
+else{
+  console.error('StitchUser Unable to Login:=>', authUser);
+}
+
+}catch(error){
+console.log(authUser,"--------------",error);
+ yield fork(actionWatcher, service);
+}
+
+}
 
 
 /**
@@ -256,24 +310,7 @@ return profiles;
    yield call (service.logout);
 
   }
-/**
-* actionWatcher : Spawns the generator fuctions that listens for actions
-* @param service: a DAO object
-*/
-export function* actionWatcher(service) {
-     yield takeEvery(LOGIN_USER_REQUEST, authorizeUser,service);
-  yield takeEvery(GOOGLE_SIGNOUT, logout,service);
-  yield takeEvery(LOGIN_SUCCESS, _onAuthSucess, service);
-  yield takeEvery (GOOGLE_SIGNIN_REQUEST, googleAuthenticationPress,service,false )
-   yield takeEvery(ADD_PROFILE_REQUEST, insertProfile, service.stitchCrudServices);
-   yield takeEvery(ADD_EVENT_REQUEST, insertEvent, service.stitchCrudServices);
-   yield takeEvery(UPDATE_EVENT_REQUEST, updateEvent, service.stitchCrudServices);
-   yield takeEvery(UPDATE_PROFILE_REQUEST, updateProfile, service.stitchCrudServices);
-   yield takeEvery(FETCH_PROFILE_REQUEST, fetchProfiles, service.stitchCrudServices);
-   yield takeEvery(FETCH_EVENT_REQUEST, fetchEvents, service.stitchCrudServices);
-   yield takeEvery(DELETE_EVENT_REQUEST, deleteEvent, service.stitchCrudServices);
-   yield takeEvery(DELETE_PROFILE_REQUEST, deleteProfile, service.stitchCrudServices);
-}
+
 
 
 /*
@@ -295,38 +332,4 @@ export function *loadYoutubeLists() {
 }
 */
  
-/** only export the rootSaga
- *  single entry point to start all Sagas at once
- */
-export  function* rootSaga() {
-  let authUser;
-  const service =  new ServicesManager();
 
-yield service.initialize(REMOTE_RESOURCE_STRING)
-//  yield service.authListen();
-
-try{
-    authUser = yield call(authorizeUser, service);
-
-    if(!authUser){
-      authUser = yield service.dbServices.authorizeAnonymously();
-    }
-
-    if(authUser.isLoggedIn){
-
-    //start listening  for actions
-    yield fork(actionWatcher, service);
-
-    //retrieve data from backend
-    yield call(  _onAuthSucess, service); 
-}
-else{
-  console.error('StitchUser Unable to Login:=>', authUser);
-}
-
-}catch(error){
-console.log(authUser,"--------------",error);
- yield fork(actionWatcher, service);
-}
-
-}

@@ -4,10 +4,7 @@
 
 //import 'react-native';
 import React from 'react';
-/*
-import { Root, Container } from "native-base";
-import { SafeAreaView, } from "react-native";
-*/
+
 import { Provider } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import { rootSaga } from '../src/redux/sagas/authSagas.js';
@@ -46,16 +43,16 @@ const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaM
 
 //console.log("store",store.getState().events); 
 
- describe('Event Reducer', () => {
+ describe('The Event Redux Reducer...', () => {
  
-    it('should fetch list of events', () => {
+    it('fetches a list of events', () => {
       const initialState =[];
       const newState = eventsReducer(initialState, requestFetchEvent());
  
       expect(newState).toEqual(initialState);
     });
 
-     it('should add 1 events, empty store', () => {
+     it('it adds an event, empty store', () => {
       const initialState = {events:{} ,tmpEvent:{}};
       const newEvent = getDefaultEvent();
       const testNewState = {...initialState.events,  [newEvent.id]:newEvent};
@@ -103,7 +100,7 @@ const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaM
       const initialStateEventCount = Object.keys(initialState.events).length;
       const eventIdToBeRemoved = Object.keys(initialState.events)[0];
       const eventToRemove = initialState.events[eventIdToBeRemoved];
- 		 let tmp = {...initialState.events};
+ 		  let tmp = {...initialState.events};
       tmp = delete tmp[eventIdToBeRemoved];
       const testNewState =tmp; 
       const expectedState = {events:testNewState, tmpEvent:initialState.tmpEvent} ;

@@ -1,9 +1,8 @@
 //This is an example code to Add Search Bar Filter on Listview// 
 import React, { Component } from 'react';
 //import react in our code. 
-import { connect } from 'react-redux';
-import withRouter from '../../withRouterManager.js';
-import { bindActionCreators } from 'redux';
+
+
 import { StyleSheet, View, TextInput,FlatList,Pressable} from 'react-native';
 import { SwipeRow,Container, Header, Content,Title,Icon,
 Picker, Thumbnail, Text, Body, Right, Button, Toast } from 'native-base';
@@ -29,7 +28,7 @@ import CalendarView from '../calendarView';
 
   /** Loads events into the component */
   componentDidMount() {
-    console.log("EVVTSEARCH componentDidMount=>",this.props.events["59059"]);
+    console.log("EVVTSEARCH componentDidMount=>",this.props.events);
     this.setState({ isLoading: false});
   }
 
@@ -221,34 +220,6 @@ renderSearchField = () =>(
   }
 }
 
-/*
- *    REDUX Specific
- */
-
-const mapStateToProps = state => {
-   const eventKeys = Object.keys(state.events.events);
-  const isConnected =  ((state.auth!== NEED_AT_LEAST_ANONYMOUS_LOGIN) && state.auth.auth &&  (state.auth.auth.loggedInProviderName===GOOGLE_PROVIDER_NAME));
-const isGoogleUser = (isConnected && state.auth.auth.userProfile.identities[0].id);
-  
-console.log("mapStateToProps=>", Object.entries( state.events.events).filter((entry)=>entry.id==="59059"));
-  return {
-    isConnected : isConnected,
-    isGoogleUser: (isConnected && state.auth.auth.userProfile.identities[0].id),
-    events:state.events.events,
-    canAddEvent : true, //(state.auth!==1) && (state.auth.auth.loggedInProviderName==={GOOGLE_PROVIDER_NAME}),
-
-    eventCount: eventKeys.length, 
-
-  }
-
-}
-
-
-
-
-function matchDispatchToProps(dispatch){
-  return bindActionCreators({addEventRequest:addEventRequest,addEventsToLocal:addEventsToLocal, deleteEventRequest: deleteEventRequest}, dispatch)
-}
 
 const styles = StyleSheet.create({
   viewStyle: {justifyContent: 'center',flex: 1,padding: 10,
@@ -270,7 +241,7 @@ bodyViewStyle:{flex:1},
   },
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(EventSearchAndResultsScreen)
+export default EventSearchAndResultsScreen;
 //export default withRouter(connect(mapStateToProps,matchDispatchToProps )(EventSearchAndResultsScreen))
 
 

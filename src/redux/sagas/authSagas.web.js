@@ -211,7 +211,6 @@ try{
        {
             yield put(fetchProfileFailure(profiles.errorStack+profiles.error.message) )
        }
-               console.log("profiles",profiles);
 
 return profiles;
  }catch(error) { //catch unexpected errors
