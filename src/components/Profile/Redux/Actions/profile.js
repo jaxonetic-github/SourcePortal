@@ -47,10 +47,10 @@ export function fetchProfileSuccess(profiles) {
 }
 
 /**
-* @param idObj is {id:itemId}
+* @param Profileid is Profileid
 */
-export function deleteProfileRequest(idObj) {
- return {type: DELETE_PROFILE_REQUEST ,  payload:idObj}
+export function deleteProfileRequest(profileid) {
+ return {type: DELETE_PROFILE_REQUEST,  payload:profileid}
 }
 export function deleteProfileFailure(error) {
   return { type: DELETE_PROFILE_FAILURE, payload: error }

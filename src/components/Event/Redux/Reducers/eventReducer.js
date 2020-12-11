@@ -42,8 +42,12 @@ const eventReducer = (state=eventStateSkeleton, action) => {
                 events:{...newEvents, ...state.events}
       };
     case DELETE_EVENT_REQUEST:
+             console.log(action.payload,"*********Event Reducer Delete:**************");
+
         let tmp = {...state.events};
-        delete tmp[action.payload.id];
+        delete tmp[action.payload];
+     //    console.log(tmp, "<<:Event Reducer Delete:>>", action.payload.id);
+
       return {
        tmpEvent:{...state.tmpEvent },
          events:tmp

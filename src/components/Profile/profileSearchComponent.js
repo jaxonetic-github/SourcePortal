@@ -103,10 +103,10 @@ renderSearchField = () =>(
               <View style={{flex:1}}>
               <Button transparent  onPress={() =>this.props.navigation.navigate('Profile',{  profileIndex: profile.item.id,  profile:this.props.profiles[profile.item.id], role:profile.item.id} )} 
                                     style={{flex:1,alignSelf:"flex-end"}}>
-                  <Text>{TEXT_VIEW}{profile.item.id}</Text>
+                  <Text>{TEXT_VIEW}</Text>
                 </Button>
                 <Button transparent  onPress={() => this.props.deleteProfileRequest(profile.item.id)} style={{flex:1,alignSelf:"flex-end"}}>
-                  <Text>Delete{profile.item.id}</Text>
+                  <Text>Delete</Text>
                 </Button>
                 </View >
                 </View>  
@@ -114,11 +114,12 @@ renderSearchField = () =>(
       
 
 /*
-* duplicate code also found in eventsearch
+* duplicate code also found in profilesearch
 */
   addButton = ()=>{
+    console.log("*******ADD BUTTON=", this.props.canAddProfile );
     const _addButton = this.props.canAddProfile 
-      ?  (<Button transparent  onPress={()=>this.props.navigation.navigate('Profile', { profileIndex: -1, profiles:this.state.profiles, role:this.props.canAddProfile } )} >
+      ?  (<Button title="Create New" transparent  onPress={()=>this.props.naviation && this.props.navigation.navigate('Profile', { isNewProfile:true } )} >
              <Icon ios={ICON_IOS_CIRCLE} android={ICON_ANDROID_CIRCLE} style={COMMON_ICON_STYLE}/>
                <Text style={styles.textStyle}>{TEXT_ADD_ARTIST}</Text>
             </Button>)

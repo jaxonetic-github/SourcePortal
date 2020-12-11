@@ -29,7 +29,7 @@ const mapStateToProps = state => {
 
 
 function matchDispatchToProps(dispatch){
-  return bindActionCreators({fetchProfileRequest:fetchProfileRequest, deleteProfileRequest: removeLocalProfile}, dispatch)
+  return bindActionCreators({fetchProfileRequest:fetchProfileRequest, deleteProfileRequest: deleteProfileRequest}, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(ProfileSearchComponent)

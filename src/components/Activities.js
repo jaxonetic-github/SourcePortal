@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {StyleSheet, TextInput, Platform} from 'react-native';
 import {Container, Content, Tab, Tabs} from 'native-base';
 import {COMMON_DARK_BACKGROUND} from './../constants.js';
-import EventSearch from './Event/eventSearch';
+import EventSearch from './Event/eventSearchRedux.js';
 import ProfileSearch from './Profile/profileSearch.js';
 
 /**
@@ -19,6 +19,7 @@ class Activities extends Component {
    * Render tabs
    **/
   render() {
+    console.log("Activities=====>");
     return (
       <Container>
         <Content padding>
@@ -46,6 +47,7 @@ class Activities extends Component {
  * map redux state to component props
  */
 const mapStateToProps = (state) => {
+  console.log("Activities=====>");
   return {};
 };
 

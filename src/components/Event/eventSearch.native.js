@@ -22,14 +22,9 @@ import CalendarView from '../calendarView';
   constructor(props) {
     super(props);
     //setting default state
+    console.log(this.props.canAddEvent,"-----+++++++++++++----", this.props.route);
     const canAddEvent = this.props.canAddEvent || (this.props.route && this.props.route.params.canAddEvent);
     this.state = { canAddEvent:canAddEvent, isLoading: true, text: EMPTY_STRING, location:"All"};
-  }
-
-  /** Loads events into the component */
-  componentDidMount() {
-    console.log("EVVTSEARCH componentDidMount=>",this.props.events);
-    this.setState({ isLoading: false});
   }
 
 /**
@@ -61,8 +56,8 @@ import CalendarView from '../calendarView';
 
     //Object.keys( this.props.events).forEach(([key, value])=>{})
     //passing the inserted text in textinput
-    const newData = Object.entries( this.props.events).filter(function(item) {
-
+    const newData = Object.entries( this.props.events).map(function(itemArr) {
+      const item = itemArr[1];
       //applying filter for the inserted text in search bar
       const name = item.name ? item.name.toUpperCase() : ''.toUpperCase();
       const description = item.description ? item.description.toUpperCase() : ''.toUpperCase();
@@ -73,38 +68,25 @@ import CalendarView from '../calendarView';
       const email = item.email ? item.email.toUpperCase() : ''.toUpperCase();
 
       const textData = text.toUpperCase();
-
+ //console.log(text,"::::ITem:::::",item.name);
       return ((location.indexOf(textData) > -1)||(calendar.indexOf(textData) > -1)||(name.indexOf(textData) > -1)||(description.indexOf(textData) > -1) ||
-        (phone.indexOf(textData) > -1)||(website.indexOf(textData) > -1)||(email.indexOf(textData) > -1));
+        (phone.indexOf(textData) > -1)||(website.indexOf(textData) > -1)||(email.indexOf(textData) > -1)) ? item:null ;
     });
+  //  console.log("NEWDATA:::::",newData);
     return newData;
   }
 
 
  /** Exract a key from an object for the List */
-    _keyExtractor = (item, index) =>(item.id ? item.id.toString() : Math.floor(Math.random() * Math.floor(999999)));
+    _keyExtractor = (item, index) =>((item && item.id) ? item.id.toString() : Math.floor(Math.random() * Math.floor(999999)));
 
 /** Navigate to event-creation screen  */
-   _onPress = (itemId) => {
-   // console.log(itemId, this);
-console.log(this.props.events[itemId],"onPress==>"+ROUTE_EVENT_VIEW+"/"+itemId);
- this.props.navigation.push('Event',{ eventIndex: itemId, eventObj:this.props.events[itemId] });//this.props.history.push(ROUTE_EVENT_VIEW+"/"+itemId );
-  };
+   _onPress = (itemId) => this.props.navigation.push('Event',{ eventIndex: itemId.id, eventObj: this.props.events[itemId.id] });
 
 
   /* Navigate to artist-creation screen on [add] buttonpress  */
-  _onPressNew =async () => {
-   const newEvt = getDefaultEvent();
-
-    //go to the detail of new  event
-    this.props.navigation.push("Event",{isNewEvent:true, eventObj:newEvt});
-  }
-
-//onPress={() => this.props.navigation.push('EventView', { })} 
-/** Navigate to event-creation screen  */
-   _onPressDelete = (itemId) => {
-  this.props.deleteEventRequest({id:itemId})
-  };
+  _onPressNew = () =>  this.props.navigation.push("Event",{isNewEvent:true, eventObj:getDefaultEvent()});
+  
 
 /**
   * A component to display a summary of an individual event from the list of events
@@ -112,21 +94,19 @@ console.log(this.props.events[itemId],"onPress==>"+ROUTE_EVENT_VIEW+"/"+itemId);
   * @param {index, item, separators} item - item.item expectected to be [eventId, eventObject]
   */
 _renderItem = (item) => { 
- const formatCalendarObject = (calendar) =>{
- return (calendar.year ? calendar.year+"-"+calendar.month+"-"+calendar.day : calendar)
-}
-  return(
-              <View style={styles.viewStyle}>
-              <Pressable onPress={()=>this._onPress(item.item[0])} onLongPress={()=>this._onPressDelete(item.item[0])} >
+ const formatCalendarObject = (calendar) =>(calendar.year ? calendar.year+"-"+calendar.month+"-"+calendar.day : calendar)
+
+  return item.item ? 
+              (<View style={styles.viewStyle}>
+              <Button role={""} onPress={()=>this._onPress(item.item)} onLongPress={()=>this.props.deleteEventRequest(item.item.id)} >
               <Thumbnail source={{uri:/*item.item.imageURI||*/NO_PHOTO_AVAILABLE_URI}}/>
               <View style={styles.innerViewStyle}>
-                  <Title style={styles.rightText} >{item.item[1].name}</Title>
-                  <Text style={styles.rightText} >{formatCalendarObject(item.item[1].calendar)}</Text>
-                  <Text note numberOfLines={2}>{item.item[1].description}</Text>
+                  <Title style={styles.rightText} >{item.item.name}</Title>
+                  <Text style={styles.rightText} >{formatCalendarObject(item.item.calendar)}</Text>
+                  <Text note numberOfLines={2}>{item.item.description}</Text>
               </View>
-              </Pressable>
-              </View>
-            );
+              </Button>
+              </View>) : <View></View> ;
 }
 
 /*
@@ -160,23 +140,11 @@ renderSearchField = () =>(
         />)
 
 /** React Render **/
-  render() {
-    if (this.state.isLoading) {
-      //Loading View while data is loading
-      return (COMMON_ACTIVITY_INDICATOR );
-    }
-  
-  const locations = ()=>{ 
-   // console.log("Locations::", this.props.events);
-    return Object.entries( this.props.events).forEach((event)=>(<Picker.Item key={event.id} label={event.location} value={event.location} />));
-  };
+  render() { 
+    const locations = ()=>Object.entries( this.props.events).map((event)=><Picker.Item key={event[1].id} label={event[1].location} value={event[1].location} />)
+    
+    const states = STATES.states.map((event)=>(<Picker.Item key={event} label={event} value={event} />));
    
-  const states = STATES.states.map((event)=>(<Picker.Item key={event} label={event} value={event} />));
-  const months = [{key:"01", label:"january"},{key:"02", label:"february"},{key:"03", label:"march"},{key:"04", label:"april"},
-                  {key:"05", label:"may"},{key:"06", label:"june"},{key:"07", label:"july"},{key:"08", label:"august"},
-                  {key:"09", label:"september"},{key:"10", label:"october"},{key:"11", label:"november"},{key:"12", label:"december"}].map((month)=>
-                    (<Picker.Item key={month.key} label={month.label} value={month.key} />));
-
     return (
       //ListView to show with textinput used as search bar 
       <Container style={styles.viewStyle}>
@@ -189,6 +157,36 @@ renderSearchField = () =>(
             </Right>
         </Header>
        <Content >
+ <View style={{width:300, backgroundColor:"silver"}}>
+         <Picker mode="dropdown" selectedValue={this.state.location}>
+            <Picker.Item key={"All-States"} label={"Search By State"} value={"All"} />
+             {states}
+            </Picker>
+            </View>
+             <Picker
+              mode="dropdown"
+              iosHeader="Locations"
+              selectedValue={this.state.location}
+              onValueChange={this.onLocationChange.bind(this)} >
+            <Picker.Item key={"All"} label={"Search By Locations"} value={"All"} />
+             {locations()}
+            </Picker> 
+
+            <FlatList
+  
+          data={this.SearchFilterFunction(this.state.text)}
+          renderItem={this._renderItem}
+          keyExtractor={this._keyExtractor}
+          ListHeaderComponent={this.renderSearchField}
+           ItemSeparatorComponent = {COMMON_LISTVIEW_ITEM_SEPARATOR}
+        />
+          </Content>
+      </Container>
+    );
+  }
+}
+
+/**
        <CalendarView generalView/>
        <View style={{width:300, backgroundColor:"silver"}}>
          <Picker mode="dropdown" selectedValue={this.state.location}>
@@ -206,19 +204,14 @@ renderSearchField = () =>(
              {locations()}
             </Picker> 
         <FlatList
-            leftOpenValue={LIST_SWIPELEFT_OPENVALUE}
-            rightOpenValue={LIST_SWIPERIGHT_OPENVALUE}   
+  
           data={this.SearchFilterFunction(this.state.text)}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
           ListHeaderComponent={this.renderSearchField}
            ItemSeparatorComponent = {COMMON_LISTVIEW_ITEM_SEPARATOR}
         />
-          </Content>
-      </Container>
-    );
-  }
-}
+*/
 
 
 const styles = StyleSheet.create({

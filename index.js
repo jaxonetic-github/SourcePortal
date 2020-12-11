@@ -76,7 +76,7 @@ import ProfileView from './src/components/Profile/profileview.native.js';
 import ProfileComponent from './src/components/Profile/profileviewComponent.js';
 import EventComponent from './src/components/Event/eventViewComponent.js';
 import EventView from './src/components/Event/eventView.js';
-import EventSearch from './src/components/Event/eventSearch';
+import EventSearch from './src/components/Event/eventSearchRedux.js';
 import SimpleInputEdit from './src/components/simpleInputComponent.js';
 
 import {
@@ -243,7 +243,7 @@ export default function Main() {
               />
               <Drawer.Screen name="EventComponent" component={EventComponent} />
 
-      <Drawer.Screen name="Trubrary" component={Trubrary} />
+              <Drawer.Screen name="Trubrary" component={Trubrary} />
               <Drawer.Screen name="Activities" component={ActivitiesTabs} />
               <Drawer.Screen name="ProfileView" component={ProfileView} />
 

@@ -68,6 +68,7 @@ class ProfileViewComponent extends Component {
      console.log(this.state,"=====PersonalProfle & Updateable====" )
 
     }
+    console.log("this.state in profileviewcomponent STATE::>",this.state);
   }
 
 

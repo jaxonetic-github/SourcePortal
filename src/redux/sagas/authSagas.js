@@ -183,7 +183,7 @@ try{
   export function* deleteEvent(service, action) {
     // Get a MongoDB Service Client
 try{
-
+console.log("AAAAUUUTHHH SAGAS DELETE EVENT", action);
 const results = yield call(service.deleteEvent, action.payload);
     if(results.deletedCount>=0){
   

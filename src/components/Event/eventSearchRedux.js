@@ -29,7 +29,7 @@ const mapStateToProps = state => {
   const isConnected =  ((state.auth!== NEED_AT_LEAST_ANONYMOUS_LOGIN) && state.auth.auth &&  (state.auth.auth.loggedInProviderName===GOOGLE_PROVIDER_NAME));
 const isGoogleUser = (isConnected && state.auth.auth.userProfile.identities[0].id);
   
-console.log("mapStateToProps=>", Object.entries( state.events.events).filter((entry)=>entry.id==="59059"));
+console.log("mapStateToProps OF EVENT SEARCH********=>");
   return {
     isConnected : isConnected,
     isGoogleUser: (isConnected && state.auth.auth.userProfile.identities[0].id),
@@ -49,25 +49,6 @@ function matchDispatchToProps(dispatch){
   return bindActionCreators({addEventRequest:addEventRequest,addEventsToLocal:addEventsToLocal, deleteEventRequest: deleteEventRequest}, dispatch)
 }
 
-const styles = StyleSheet.create({
-  viewStyle: {justifyContent: 'center',flex: 1,padding: 10,
-  },
-innerHeaderStyle:{backgroundColor: COMMON_DARK_BACKGROUND},height:50,
-  textStyle: {
-    padding: 1, color:ACTIVE_TINT_COLOR
-  },
-  innerViewStyle:{margin:5,padding:5, borderRadius:20,alignSelf:"flex-end", position:"absolute", top:0},
-bodyViewStyle:{flex:1},
-  rightText:{alignSelf:"flex-end"},
-
-  textInputStyle: {
-    textAlign: 'center',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#009688',
-    backgroundColor: '#FFFFFF',
-  },
-});
 
 export default connect(mapStateToProps, matchDispatchToProps)(EventSearchAndResultsScreen)
 //export default withRouter(connect(mapStateToProps,matchDispatchToProps )(EventSearchAndResultsScreen))

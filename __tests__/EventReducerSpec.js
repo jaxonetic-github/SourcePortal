@@ -104,7 +104,7 @@ const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaM
       tmp = delete tmp[eventIdToBeRemoved];
       const testNewState =tmp; 
       const expectedState = {events:testNewState, tmpEvent:initialState.tmpEvent} ;
-      const newState = eventsReducer(initialState, deleteEventRequest(eventToRemove));
+      const newState = eventsReducer(initialState, deleteEventRequest(eventIdToBeRemoved));
 	//expect one less event
       expect(initialStateEventCount-1).toEqual(Object.keys(newState.events).length);
 	//expect specific output
