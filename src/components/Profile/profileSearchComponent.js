@@ -10,7 +10,7 @@ import { SwipeRow, Container, Header, Content, Title,  Thumbnail,Icon, Text,  Bo
  import {removeLocalProfile, deleteProfileRequest,fetchProfileRequest} from './Redux/Actions/profile.js'
 import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACTIVE_TINT_COLOR, ROUTE_PROFILE_VIEW,
         COMMON_LISTVIEW_ITEM_SEPARATOR, GOOGLE_PROVIDER_NAME, ROUTE_YOUTUBELIST_VIEW, TEXT_VIEW,NO_PHOTO_AVAILABLE_URI,
-        TEXT_ADD_ARTIST,ICON_IOS_CIRCLE,ICON_ANDROID_CIRCLE,ICON_ALL_TRASH,EMPTY_STRING,TRANSPARENT_COLOR, PLACEHOLDER_SEARCH_TEXT,
+        TEXT_CREATE_NEW,ICON_IOS_CIRCLE,ICON_ANDROID_CIRCLE,ICON_ALL_TRASH,EMPTY_STRING,TRANSPARENT_COLOR, PLACEHOLDER_SEARCH_TEXT,
         TEXT_DELETE, renderListView} from '../../constants.js'
 
 /**
@@ -95,8 +95,7 @@ renderSearchField = () =>(
   * available to the component
   * @param {object} item - event Data item
   */
-  _renderItem = (profile) => (
-          
+  _renderItem = (profile) => (       
               <View  style={styles.outerViewStyle}>
               <Thumbnail source={{uri:profile.item.imageURI||NO_PHOTO_AVAILABLE_URI}}/>
               <Text style={{flex:1, alignSelf:"center"}}>{profile.item.name}</Text>
@@ -119,9 +118,9 @@ renderSearchField = () =>(
   addButton = ()=>{
     console.log("*******ADD BUTTON=", this.props.canAddProfile );
     const _addButton = this.props.canAddProfile 
-      ?  (<Button title="Create New" transparent  onPress={()=>this.props.naviation && this.props.navigation.navigate('Profile', { isNewProfile:true } )} >
+      ?  (<Button transparent  onPress={()=>this.props.navigation && this.props.navigation.navigate('Profile', { isNewProfile:true } )} >
              <Icon ios={ICON_IOS_CIRCLE} android={ICON_ANDROID_CIRCLE} style={COMMON_ICON_STYLE}/>
-               <Text style={styles.textStyle}>{TEXT_ADD_ARTIST}</Text>
+               <Text style={styles.textStyle}>{TEXT_CREATE_NEW}</Text>
             </Button>)
       : null;
       return _addButton; }

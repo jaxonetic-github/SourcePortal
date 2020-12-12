@@ -16,7 +16,7 @@ import { updateProfileRequest, addProfileRequest } from '../src/components/Profi
 
 import { getDefaultProfile, TEXT_SAVE, PLACEHOLDER_SEARCH_TEXT,
  TEXT_UPDATE, TEXT_WEBSITE, TEXT_MAIL,TEXT_PHONE,TEXT_DESCRIPTION,  TEXT_NAME,
- TEXT_CURRENT_IMAGE,PROFILE, TEXT_ADD_ARTIST} from '../src/constants.js';
+ TEXT_CURRENT_IMAGE,PROFILE, TEXT_CREATE_NEW} from '../src/constants.js';
 
 import { UPDATE_PROFILE_DESC_BY_KEY, UPDATE_PROFILE_NAME_BY_KEY, UPDATE_PROFILE_WEBSITE_BY_KEY, UPDATE_PROFILE_PHONE_BY_KEY,UPDATE_PROFILE_EMAIL_BY_KEY, UPDATE_PROFILE_IMAGE_BY_KEY,
         ADD_NAME, ADD_PROFILE, ADD_DESC,  ADD_EMAIL, ADD_PHONE, ADD_WEBSITE, ADD_IMAGE} from '../src/redux/types';
@@ -79,7 +79,7 @@ it('Profile search', () => {
  const searchField = getByPlaceholderText(PLACEHOLDER_SEARCH_TEXT);
  
  //add button shows
- const addButton = getByText(TEXT_ADD_ARTIST);
+ const addButton = getByText(TEXT_CREATE_NEW);
  //fireEvent.changeText(searchField, profile.name.substring(0,3));
 
  //test user clicking the new button

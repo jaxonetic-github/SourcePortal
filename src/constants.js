@@ -150,7 +150,7 @@ export const TEXT_DESCRIPTION = "Description";
 export const TEXT_EVENT_CALENDAR = "Event Calendar";
 
 
-export const TEXT_ADD_ARTIST = "Add Divine";
+export const TEXT_CREATE_NEW = "Create New";
 export const TEXT_NEW_EVENT = 'New';
 export const TEXT_DELETE = 'Delete';
 export const TEXT_VIEW = 'View';
