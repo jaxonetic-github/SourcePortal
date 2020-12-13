@@ -67,7 +67,6 @@ import {NativeRouter} from 'react-router-native';
 
 import Trubrary from './src/components/Trubrary/trubrary';
 import YouTubeList from './src/components/Trubrary/youtubeList.js';
-import Activities from './src/components/Activities/Activities';
 import SimpleWebview from './src/components/WebResources/simpleWebView.js';
 import Home from './src/components/Home/home';
 import CalendarView from './src/components/calendarView';
@@ -77,7 +76,6 @@ import ProfileComponent from './src/components/Profile/profileviewComponent.js';
 import EventComponent from './src/components/Event/eventViewComponent.js';
 import EventView from './src/components/Event/eventView.js';
 import EventSearch from './src/components/Event/eventSearchRedux.js';
-import SimpleInputEdit from './src/components/simpleInputComponent.js';
 
 import {
   COMMON_DARK_BACKGROUND,

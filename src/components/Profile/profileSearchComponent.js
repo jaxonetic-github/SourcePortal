@@ -116,7 +116,6 @@ renderSearchField = () =>(
 * duplicate code also found in profilesearch
 */
   addButton = ()=>{
-    console.log("*******ADD BUTTON=", this.props.canAddProfile );
     const _addButton = this.props.canAddProfile 
       ?  (<Button transparent  onPress={()=>this.props.navigation && this.props.navigation.navigate('Profile', { isNewProfile:true } )} >
              <Icon ios={ICON_IOS_CIRCLE} android={ICON_ANDROID_CIRCLE} style={COMMON_ICON_STYLE}/>

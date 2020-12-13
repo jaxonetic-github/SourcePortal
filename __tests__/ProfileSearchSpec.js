@@ -39,31 +39,18 @@ import { initialStoreState } from '../src/redux/state.js';
 
 import ProfileSearch from '../src/components/Profile/profileSearchComponent.js';
 import ProfileSearchRedux from '../src/components/Profile/profileSearch.js';
-import SimpleInputEdit from '../src/components/simpleInputComponent.js';
 
 // Note: test renderer must be required after react-native.
 // import renderer from 'react-test-renderer';
 // import { mount, shallow  } from 'enzyme';
-import configureStore from 'redux-mock-store';
 
 //import {AuthProvider} from '../src/services/realmApp.js';
 
-const mockStore = configureStore([]);
-
-const sagaMiddleware = createSagaMiddleware();
-
-//combine reducers
-const rootReducer = combineReducers({profiles: profilesReducer, events:eventsReducer, auth: authReducer, resourcesData:resourcesReducer, 
-  sideBar:sideBarReducer,videoMediaPromotions:videoRefsReducer});
-
-//create redux store
-const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaMiddleware) );
- 
 
  describe('Profile Search Test ...', () => {
 
 
-it('Profile search', () => {
+it('has a search input and a clickable CREATE NEW BUTTON', () => {
  const onPressUpdateProfile = jest.fn();
  const profileIndexToTest = 1; 
  const updateNameText = 'New Test name';
@@ -86,32 +73,42 @@ it('Profile search', () => {
  fireEvent.press(addButton);
 
     //  expect(onPressUpdateProfile).toHaveBeenCalledWith(profile);
+ });
 
-});
 
 
-//console.log(wrapper);
-//let component = mount(test); wrapper.setProps({ bar: 'foo' });
-    //var test = React.createElement(() => <Profile  profileIndex={1} profiles={initialStoreState.profiles.profiles}  />);
-  	//const Prof = <Profile  profileIndex={1} profiles={initialStoreState.profiles.profiles}  />;
-/*
-  it('renders the inner Counter', () => {
 
-    let wrapper = shallow(<Profile  profileIndex={1} profiles={initialStoreState.profiles.profiles}  />);
-console.log("text--",wrapper.text());
-console.log("html",wrapper.state())
-    const resp = wrapper.find(SimpleInputEdit).length;
-console.log(wrapper , "---",resp, "---->");
-    expect(resp).toEqual(1);
-  });*/
+it('filters by changing text in search field, and shows clickable results', () => {
+ const onPressUpdateProfile = jest.fn();
+ const profileIndexToTest = 1; 
+ const updateNameText = 'New Test name';
+ const updateEmailText = 'New Test email';
+ const updatePhoneText = 'New Test phone';
+ const updateWebsiteText = 'New Test website';
+ const updateDescriptionText = 'New Test description';
+ //console.log("profile search test profiles::", initialStoreState.profiles.profiles)
+ const profile =  initialStoreState.profiles.profiles[profileIndexToTest];
+ const {getByPlaceholderText, queryByPlaceholderText, getByText,getAllByText,getAllByTestId,getByDisplayValue, getAllByDisplayValue} = 
+          render(<ProfileSearch profiles={initialStoreState.profiles.profiles} canAddProfile={false}/>);
+//searchfield exists
+ const searchField = getByPlaceholderText(PLACEHOLDER_SEARCH_TEXT);
 
-/*
-it('Profile renders with redux and saga',()=>{
+ getByText("Nami");
+ fireEvent.changeText(searchField, profile.name.substring(0,3));
 
-  <Provider store={store}>
-   <Profile />
-  </Provider>
+ //
+ getByText(profile.name);
+  //getByText("Nami")
+ //add button shows
+ //const addButton = getByText(TEXT_CREATE_NEW);
+ //fireEvent.changeText(searchField, profile.name.substring(0,3));
 
-});
-*/
+ //test user clicking the new button
+// fireEvent.press(addButton);
+
+    //  expect(onPressUpdateProfile).toHaveBeenCalledWith(profile);
+ });
+
+
+
 });

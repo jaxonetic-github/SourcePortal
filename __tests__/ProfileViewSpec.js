@@ -38,7 +38,6 @@ import createSagaMiddleware from 'redux-saga';
 import { initialStoreState } from '../src/redux/state.js';
 
 import Profile from '../src/components/Profile/profileviewComponent.js';
-import SimpleInputEdit from '../src/components/simpleInputComponent.js';
 
 // Note: test renderer must be required after react-native.
 // import renderer from 'react-test-renderer';

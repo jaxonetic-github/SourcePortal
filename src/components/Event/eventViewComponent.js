@@ -18,7 +18,6 @@ import {getDefaultEvent, iconManager,COMMON_ICON_STYLE_SILVER, COMMON_ICON_STYLE
         TEXT_NAME,COMMON_DARK_BACKGROUND,ICON_REMOVE_CIRCLE   } from '../../constants.js';
 //import withRouter from '../../withRouterManager.js';
 
-import SimpleInputEdit from "../simpleInputComponent.js";
 import moment from 'moment';
 
 /**

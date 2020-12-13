@@ -80,8 +80,6 @@ import CalendarView from '../calendarView';
  /** Exract a key from an object for the List */
     _keyExtractor = (item, index) =>((item && item.id) ? item.id.toString() : Math.floor(Math.random() * Math.floor(999999)));
 
-/** Navigate to event-creation screen  */
-   _onPress = (itemId) => this.props.navigation.push('Event',{ eventIndex: itemId.id, eventObj: this.props.events[itemId.id] });
 
 
   /* Navigate to artist-creation screen on [add] buttonpress  */
@@ -93,19 +91,23 @@ import CalendarView from '../calendarView';
   * available to the component
   * @param {index, item, separators} item - item.item expectected to be [eventId, eventObject]
   */
-_renderItem = (item) => { 
+_renderItem = (item) => {
+
  const formatCalendarObject = (calendar) =>(calendar.year ? calendar.year+"-"+calendar.month+"-"+calendar.day : calendar)
+/** Navigate to event-creation screen  */
+   _onPress = (itemId) => this.props.navigation.push('Event',{ eventIndex: itemId.id, eventObj: this.props.events[itemId.id] });
 
   return item.item ? 
               (<View style={styles.viewStyle}>
-              <Button role={""} onPress={()=>this._onPress(item.item)} onLongPress={()=>this.props.deleteEventRequest(item.item.id)} >
               <Thumbnail source={{uri:/*item.item.imageURI||*/NO_PHOTO_AVAILABLE_URI}}/>
               <View style={styles.innerViewStyle}>
                   <Title style={styles.rightText} >{item.item.name}</Title>
                   <Text style={styles.rightText} >{formatCalendarObject(item.item.calendar)}</Text>
                   <Text note numberOfLines={2}>{item.item.description}</Text>
               </View>
-              </Button>
+            <Button role={""} onPress={()=>this._onPress(item.item)} ><Text >{TEXT_VIEW}</Text></Button>
+            <Button role={""} onPress={()=>this.props.deleteEventRequest(item.item.id)}  ><Text >{TEXT_DELETE}</Text></Button>
+
               </View>) : <View></View> ;
 }
 

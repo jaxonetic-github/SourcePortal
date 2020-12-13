@@ -7,7 +7,6 @@ import {
   Text,
   Alert,
 } from 'react-native';
-import Input from './textinput';
 import MapView from 'react-native-maps';
 import {
   Picker,
@@ -143,6 +142,13 @@ function handleError(error) {
       ? this.state.position.formattedAddress
       : null;
     console.log(this.state);
+    /** renmoved
+    <Input
+              inputInitialValue={this.state.location}
+              inputType={this.state.inputType}
+              updateChange={this.onAddressChange}
+            />
+            **/
     return (
       <Container>
         <Header
@@ -171,11 +177,7 @@ function handleError(error) {
             <Text>{latitude}</Text>
             <Text>{formattedAddress}</Text>
             <Text>{this.state.location}</Text>
-            <Input
-              inputInitialValue={this.state.location}
-              inputType={this.state.inputType}
-              updateChange={this.onAddressChange}
-            />
+            
           </Item>
           <Picker
             mode="dropdown"
