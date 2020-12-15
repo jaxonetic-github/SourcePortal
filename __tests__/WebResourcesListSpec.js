@@ -56,10 +56,12 @@ it('WebResourcesList renders correctly, (no redux store)', () => {
 
  	//const searchField = getByPlaceholderText(PLACEHOLDER_SEARCH_TEXT);
  	compData.forEach((record)=>getByText(record.title));
-
+	
+	//shopify link
+	const shopify = getByText("Discounted Products");
+			
 /*
 //ensure the three tab headers display
-getByText("Media Outlets");
 getByText("Our Master Teachers");
 getByText("Roads to the Community");
 
