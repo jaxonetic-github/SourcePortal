@@ -14,47 +14,6 @@ import {commonViewButton, COMMON_DARK_BACKGROUND, NO_PHOTO_AVAILABLE_URI, COMMON
  */
  class WebResourcesListComponent extends Component {
 
-/**
- * Filter events based on what the user types in the search field
- * and updates the local state text
- * @Rreturn events with the text parameter in part of it's data fields
- */ 
-  SearchFilterAndUpdateStateFunction(text) {
-    //passing the inserted text from textinput to filter user's viewable events
-    const newData = this.SearchFilterFunction(text)
-
-    //update state and re-render the list accordingly
-    this.setState({ text: text });
-  }
-
-/**
- * Filter events based on what the user types in the search field
- *
- * @Rreturn events with the text parameter in part of it's data fields
- */
-  SearchFilterFunction(text) {
-    //passing the inserted text in textinput
-    const newData = this.props.events.filter(function(item) {
-      // ignore undefined rows brought from DB
-      if (!item) 
-      { 
-        return false;
-      }
-      //applying filter for the inserted text in search bar
-      const name = item.name ? item.name.toUpperCase() : ''.toUpperCase();
-      const description = item.description ? item.description.toUpperCase() : ''.toUpperCase();
-      const phone = item.phone ? item.phone.toUpperCase() : ''.toUpperCase();
-      const website = item.website ? item.website.toUpperCase() : ''.toUpperCase();
-      const email = item.email ? item.email.toUpperCase() : ''.toUpperCase();
-
-      const textData = text.toUpperCase();
-
-      return ((name.indexOf(textData) > -1)||(description.indexOf(textData) > -1) ||
-        (phone.indexOf(textData) > -1)||(website.indexOf(textData) > -1)||(email.indexOf(textData) > -1));
-    });
-//console.log('eventsfilterfunct', newData);
-    return newData;
-  }
 
  /** Exract a key from an object for the List */
     _keyExtractor = (item, index) =>{console.log(item); 
@@ -87,17 +46,14 @@ _renderItem = (item) =>
 
 
   render() {
-console.log(this.state,":TRUBRARY:", this.props);
+
   const buttonPressAction = () => this.props.history.push(ROUTE_SIMPLE_WEB_VIEW, {record:{url:'https://tawy-online.myshopify.com' , title:"Tawy - Shop"}});
 
     return (
-      //ListView to show with textinput used as search bar 
       <Container style={styles.viewStyle}>
       <Header>{commonViewButton("Discounted Products", buttonPressAction)}</Header>
       <Content >
-     
-
-        <FlatList style={{backgroundColor:COMMON_DARK_BACKGROUND, margin:0, padding:0}}
+      <FlatList style={{backgroundColor:COMMON_DARK_BACKGROUND, margin:0, padding:0}}
                 data={this.props.webResources}
                 renderItem={this._renderItem}
                 
