@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, TextInput, } from 'react-native';
 import { Container,ListItem,Title,Icon,Picker, Thumbnail, Text,Tab, Tabs,Card, CardItem} from 'native-base';
 import { COMMON_LISTVIEW_ITEM_SEPARATOR,
-        COMMON_DARK_BACKGROUND, NO_PHOTO_AVAILABLE_URI,
+        COMMON_DARK_BACKGROUND, NO_PHOTO_AVAILABLE_URI,PLACEHOLDER_SEARCH_TEXT,
          ROUTE_SIMPLE_WEB_VIEW, ROUTE_YOUTUBELIST_VIEW,TEXT_VIEW,
         renderListView, commonViewButton} from '../../constants.js'
 import WebResourcesList from '../WebResources/webResourcesList.js';
@@ -73,7 +73,7 @@ renderSearchField = () =>(
           onChangeText={text => this.SearchFilterAndUpdateStateFunction(text)}
           value={this.state.text}
           underlineColorAndroid="transparent"
-          placeholder="Search Here"
+          placeholder={PLACEHOLDER_SEARCH_TEXT}
         />)
 
 /**
@@ -132,18 +132,10 @@ if(!imgURI)
 <Tabs>
     <Tab activeTabStyle={{backgroundColor:"silver"}} tabStyle={{backgroundColor:COMMON_DARK_BACKGROUND}}  style={{backgroundColor:COMMON_DARK_BACKGROUND}} heading="Our Master Teachers">
     <View>
-               <Picker
-              mode="dropdown"
-              iosHeader="Select your SIM"
-              style={{ width: undefined }}
-              selectedValue={this.state.selected}
-              onValueChange={this.onValueChange.bind(this)}
-            >
-             {pItems}
-            </Picker>
-       {this.renderSearchField()}  
+       {this.renderSearchField()} 
+      {renderListView(this._keyExtractor, null, this.renderItem, this.props.videoData, COMMON_LISTVIEW_ITEM_SEPARATOR, styles.outerViewStyle, styles.title,ROUTE_YOUTUBELIST_VIEW, TEXT_VIEW  )}
+ 
     </View>
-        {renderListView(this._keyExtractor, null, this.renderItem, this.props.videoData, COMMON_LISTVIEW_ITEM_SEPARATOR, styles.outerViewStyle, styles.title,ROUTE_YOUTUBELIST_VIEW, TEXT_VIEW  )}
     </Tab>
     <Tab activeTabStyle={{backgroundColor:"silver"}} tabStyle={{backgroundColor:COMMON_DARK_BACKGROUND}} style={{backgroundColor:COMMON_DARK_BACKGROUND}} heading="Media Outlets">{renderListView( ((item, index) => item.title),null, this.renderItem, this.props.onlineMediaContent,COMMON_LISTVIEW_ITEM_SEPARATOR,styles.outerViewStyle, styles.title, ROUTE_SIMPLE_WEB_VIEW, TEXT_VIEW)}</Tab>
     <Tab activeTabStyle={{backgroundColor:"silver"}} tabStyle={{backgroundColor:COMMON_DARK_BACKGROUND}} style={{backgroundColor:COMMON_DARK_BACKGROUND}} heading="Roads to the Community"><WebResourcesList history={this.props.history}/></Tab>

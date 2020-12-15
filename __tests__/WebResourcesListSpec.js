@@ -24,7 +24,7 @@ import createSagaMiddleware from 'redux-saga'
 
 import { initialStoreState } from '../src/redux/state.js';
 
-import Trubrary from '../src/components/Trubrary/trubraryComponent.js';
+import WebResourcesList from '../src/components/WebResources/webResourcesListComponent.js';
 
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
@@ -47,17 +47,17 @@ const rootReducer = combineReducers({profiles: profilesReducer, events:eventsRed
 const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaMiddleware) );
  
 
- describe('Trubrary', () => {
+ describe('WebResourcesList', () => {
 
 
-it('Trubrary renders correctly, (no redux store)', () => {
-    const {getByPlaceholderText, queryAllByText, getByText,findByText } = render(<Trubrary videoData={initialStoreState.resourcesData.youTubeResources} onlineMediaContent={initialStoreState.resourcesData.onlineMediaContent}   webResources={initialStoreState.resourcesData.webResources} />);
+it('WebResourcesList renders correctly, (no redux store)', () => {
+    const compData = initialStoreState.resourcesData.webResources;
+    const {getByPlaceholderText, queryAllByText, getByText,findByText } = render(<WebResourcesList   webResources={compData} />);
 
- 	const searchField = getByPlaceholderText(PLACEHOLDER_SEARCH_TEXT);
- 	getByText(initialStoreState.resourcesData.youTubeResources[0].title);
-getByText(initialStoreState.resourcesData.youTubeResources[1].title);
-getByText(initialStoreState.resourcesData.youTubeResources[2].title);
+ 	//const searchField = getByPlaceholderText(PLACEHOLDER_SEARCH_TEXT);
+ 	compData.forEach((record)=>getByText(record.title));
 
+/*
 //ensure the three tab headers display
 getByText("Media Outlets");
 getByText("Our Master Teachers");
@@ -65,17 +65,9 @@ getByText("Roads to the Community");
 
 const viewButtons =  queryAllByText("View");
 
-
+*/
 });
 
-it('Trubrary renders with redux and saga',()=>{
 
-
-  <Provider store={store}>
-   <Trubrary />
-  </Provider>
-
-
-});
 
 });

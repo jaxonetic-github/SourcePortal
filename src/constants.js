@@ -221,7 +221,7 @@ export const renderListView = (keyExtractor,headerComponent,renderItemComponent,
 export const commonViewButton = (buttonText,buttonPressAction) =>(
  <View  style={COMMON_VIEWBUTTON_STYLES.customOuterStyle}  >
                <View style={COMMON_VIEWBUTTON_STYLES.buttonOuterShell}>
-                <TouchableOpacity onPress={buttonPressAction||null} style={COMMON_VIEWBUTTON_STYLES.buttonTextShell} >
+                <TouchableOpacity role onPress={buttonPressAction||null} style={COMMON_VIEWBUTTON_STYLES.buttonTextShell} >
                  <Text style={COMMON_VIEWBUTTON_STYLES.buttonText}>{buttonText}</Text>
                 </TouchableOpacity></View></View>)
 
