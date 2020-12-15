@@ -4,4 +4,4 @@ node_js:
 before_install:
   - npm install -g codecov
 script:
-  - codecov
+  - codecov -t 9bc6f701-885b-4b81-ab10-38c72ddc22b2
