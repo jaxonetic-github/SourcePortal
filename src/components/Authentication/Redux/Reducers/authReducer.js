@@ -16,7 +16,7 @@ import {NEED_AT_LEAST_ANONYMOUS_LOGIN} from '../../../../constants.js'
 }
 */
 const authReducer = (state={}, action) => {
-
+console.log("authReducer::", action)
   if(!action) return state;
   
   switch(action.type){

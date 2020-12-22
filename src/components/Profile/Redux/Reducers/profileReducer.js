@@ -1,5 +1,5 @@
-import { UPDATE_PROFILE, FETCH_PROFILE_SUCCESS,  DELETE_PROFILE_REQUEST,
- ADD_PROFILE_TO_USERPROFILES} from '../../../../redux/types';
+import { UPDATE_PROFILE_REQUEST, FETCH_PROFILE_SUCCESS,  DELETE_PROFILE_REQUEST,
+ ADD_PROFILE_REQUEST} from '../../../../redux/types';
 
 /**
  * 
@@ -26,7 +26,7 @@ const profileReducer = (state={}, action) => {
         profiles:profs
       };
   
-    case UPDATE_PROFILE:
+    case UPDATE_PROFILE_REQUEST:
       let stateProfiles = {...state.profiles};
       let tmpId = action.payload.id ;
 
@@ -40,7 +40,7 @@ const profileReducer = (state={}, action) => {
         profiles:stateProfiles
       };
 
-  case ADD_PROFILE_TO_USERPROFILES:
+  case ADD_PROFILE_REQUEST:
 
     let newProfiles = {...state.profiles};
     newProfiles[action.payload.id] = action.payload;

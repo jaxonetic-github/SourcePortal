@@ -35,7 +35,7 @@ import {COMMON_ICON_STYLE, COMMON_DARK_BACKGROUND,COMMON_ACTIVITY_INDICATOR, ACT
  */ 
   SearchFilterAndUpdateStateFunction(text) {
     //passing the inserted text from textinput to filter user's viewable events
-   // const newData = this.SearchFilterFunction(text)
+    const newData = this.SearchFilterFunction(text)
     //update state and re-render the list accordingly
     this.setState({ text: text });
   }

@@ -3,7 +3,7 @@
 */
 import {UPDATE_PROFILE, REMOVE_LOCAL_PROFILE, FETCH_PROFILE_SUCCESS, FETCH_PROFILE_FAILURE, FETCH_PROFILE_REQUEST, 
  ADD_PROFILE_REQUEST, ADD_PROFILE_SUCCESS, ADD_PROFILE_FAILURE, DELETE_PROFILE_SUCCESS,DELETE_PROFILE_FAILURE,DELETE_PROFILE_REQUEST,
- ADD_PROFILE_TO_USERPROFILES, UPDATE_PROFILE_REQUEST,UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_SUCCESS } from '../../../../redux/types';
+ UPDATE_PROFILE_REQUEST,UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_SUCCESS } from '../../../../redux/types';
 
 /*
  * action creators
@@ -26,15 +26,6 @@ export function updateProfileFailure(updatedEventError) {
 export function updateProfileRequest(updatedProfile) {
   return { type: UPDATE_PROFILE_REQUEST, payload:updatedProfile }
 }
-
-export function updateProfile(updatedProfile) {
-  return { type: UPDATE_PROFILE, payload:updatedProfile }
-}
-
-export function addProfile(profileObj) {
-  return { type: ADD_PROFILE_TO_USERPROFILES, payload:profileObj }
-}
-
 
 export function fetchProfileRequest() {
  return {type: FETCH_PROFILE_REQUEST }
@@ -61,7 +52,6 @@ export function deleteProfileSuccess(results) {
 
 
 export function addProfileRequest(profile) {
-  console.log("addprofilerequest::", profile);
   return { type: ADD_PROFILE_REQUEST, payload:profile }
 }
 export function addProfileSuccess(profileSuccess) {

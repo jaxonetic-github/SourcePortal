@@ -1,4 +1,5 @@
 
+
 import {ADD_EVENT_LOCATION,REMOVE_LOCAL_EVENT, FETCH_EVENT_FAILURE, FETCH_EVENT_SUCCESS, FETCH_EVENT_REQUEST, DELETE_EVENT_REQUEST,UPDATE_EVENT_FAILURE,
 ADD_EVENT_REQUEST, ADD_EVENT_SUCCESS, ADD_EVENT_FAILURE,DELETE_EVENT_SUCCESS,DELETE_EVENT_FAILURE, DELETE_PROFILE_REQUEST,
  ADD_EVENTS_TO_USEREVENTS, ADD_EVENT_NAME, ADD_EVENT_DESC, ADD_EVENT_EMAIL, ADD_EVENT_PHONE, ADD_EVENT_WEBSITE, ADD_EVENT_IMAGE,UPDATE_EVENT_REQUEST,
@@ -32,7 +33,7 @@ export function addEventRequest(newEvent) {
 * successfully added and acknowledged from back end
 */
 export function addEventSuccess(eventsFromDB) {
-  return { type: ADD_EVENTS_TO_USEREVENTS, payload:eventsFromDB }
+  return { type: ADD_EVENT_SUCCESS  , payload:eventsFromDB }
 }
 export function addEventFailure(err) {
   return { type: ADD_EVENT_FAILURE, payload:err }

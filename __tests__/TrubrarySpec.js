@@ -51,20 +51,29 @@ const store = createStore(rootReducer, initialStoreState,  applyMiddleware(sagaM
 
 
 it('Trubrary renders correctly, (no redux store)', () => {
-    const {getByPlaceholderText, queryAllByText, getByText,findByText } = render(<Trubrary videoData={initialStoreState.resourcesData.youTubeResources} onlineMediaContent={initialStoreState.resourcesData.onlineMediaContent}   webResources={initialStoreState.resourcesData.webResources} />);
+ 	const videoData = initialStoreState.resourcesData.youTubeResources;
+
+    const {getByPlaceholderText, queryAllByText, getByText,queryByText } = render(<Trubrary videoData={videoData} onlineMediaContent={initialStoreState.resourcesData.onlineMediaContent}   webResources={initialStoreState.resourcesData.webResources} />);
 
  	const searchField = getByPlaceholderText(PLACEHOLDER_SEARCH_TEXT);
- 	getByText(initialStoreState.resourcesData.youTubeResources[0].title);
-getByText(initialStoreState.resourcesData.youTubeResources[1].title);
-getByText(initialStoreState.resourcesData.youTubeResources[2].title);
-
+ 	for(let i = 0; i<7; i++)
+ 	{
+ 		getByText(videoData[i].title);
+ 	}
+ 	
 //ensure the three tab headers display
 getByText("Media Outlets");
 getByText("Our Master Teachers");
 getByText("Roads to the Community");
 
 const viewButtons =  queryAllByText("View");
+viewButtons.forEach((record)=> fireEvent.press(record));
 
+
+fireEvent.changeText(searchField, "Wilson");
+expect(queryByText("Sertima")).toBeNull();
+//console.log("Trubrary viewbutton1::", viewButtons[0].props);
+	  	//viewButtons.forEach((record)=> fireEvent.press(record));
 
 });
 

@@ -58,6 +58,7 @@ import {categories} from '../../redux/state.js'
       const name = item.title ? item.title.toUpperCase() : ''.toUpperCase();
       return ((name.indexOf(filterText) > -1));
     });
+
     return newData;
   }
 
@@ -90,6 +91,8 @@ if(!imgURI)
 //attempting to combine the renderItems for 2 possible route options
   const route = record.item.payload ? ROUTE_YOUTUBELIST_VIEW :ROUTE_SIMPLE_WEB_VIEW ;
   //console.log(route);
+
+
    return (<ListItem style={styles.flexStyle}>       
    <Card style={styles.flexStyle}>
      <CardItem style={styles.flexStyle}>
@@ -97,8 +100,7 @@ if(!imgURI)
        <Thumbnail  source={{uri:imgURI}}/>
         <View><Title style={styles.title}>{record.item.title}</Title></View>
         {commonViewButton("View",(() => {
-          console.log(route,"----",record.item);
-          this.props.history.push(route, {record:record.item})}) )}
+          return this.props.navigation && this.props.navigation.push(route, {record:record.item})}) )}
             </View>
           </CardItem> 
       <View style={styles.title}><Text>{record.item.generalCategory?record.item.generalCategory[0]:null}</Text></View>
@@ -114,11 +116,7 @@ if(!imgURI)
              </View>*/
 
 
-  onValueChange(value: string) {
-    this.setState({
-      selected: value
-    });
-  }
+
 
 
 /** React Render
@@ -133,8 +131,7 @@ if(!imgURI)
     <Tab activeTabStyle={{backgroundColor:"silver"}} tabStyle={{backgroundColor:COMMON_DARK_BACKGROUND}}  style={{backgroundColor:COMMON_DARK_BACKGROUND}} heading="Our Master Teachers">
     <View>
        {this.renderSearchField()} 
-      {renderListView(this._keyExtractor, null, this.renderItem, this.props.videoData, COMMON_LISTVIEW_ITEM_SEPARATOR, styles.outerViewStyle, styles.title,ROUTE_YOUTUBELIST_VIEW, TEXT_VIEW  )}
- 
+      {renderListView(this._keyExtractor, null, this.renderItem, this.SearchFilterFunction(this.state.text), COMMON_LISTVIEW_ITEM_SEPARATOR, styles.outerViewStyle, styles.title,ROUTE_YOUTUBELIST_VIEW, TEXT_VIEW  )}
     </View>
     </Tab>
     <Tab activeTabStyle={{backgroundColor:"silver"}} tabStyle={{backgroundColor:COMMON_DARK_BACKGROUND}} style={{backgroundColor:COMMON_DARK_BACKGROUND}} heading="Media Outlets">{renderListView( ((item, index) => item.title),null, this.renderItem, this.props.onlineMediaContent,COMMON_LISTVIEW_ITEM_SEPARATOR,styles.outerViewStyle, styles.title, ROUTE_SIMPLE_WEB_VIEW, TEXT_VIEW)}</Tab>

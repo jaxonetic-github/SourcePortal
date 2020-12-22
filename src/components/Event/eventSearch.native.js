@@ -105,7 +105,7 @@ _renderItem = (item) => {
                   <Text style={styles.rightText} >{formatCalendarObject(item.item.calendar)}</Text>
                   <Text note numberOfLines={2}>{item.item.description}</Text>
               </View>
-            <Button role={""} onPress={()=>this._onPress(item.item)} ><Text >{TEXT_VIEW}</Text></Button>
+            <Button role={""} onPress={()=>_onPress(item.item)} ><Text >{TEXT_VIEW}</Text></Button>
             <Button role={""} onPress={()=>this.props.deleteEventRequest(item.item.id)}  ><Text >{TEXT_DELETE}</Text></Button>
 
               </View>) : <View></View> ;

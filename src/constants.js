@@ -22,7 +22,8 @@ export const FUNCTION_UPDATEEVENT = "updateEvents";
 export const FUNCTION_RETRIEVE_GOOGLE_WEBCLIENTID = "retrieveGoogleWebClientID";
 export const FUNCTION_RETRIEVE_GOOGLE_IOSCLIENTID = "retrieveGoogleIosClientID";
 export const FUNCTION_RETRIEVE_GOOGLE_APIKEY = "retrieveGoogleApiKey";
-export const FUNCTION_DELETE_PROFILE = "retrieveGoogleApiKey";
+export const FUNCTION_DELETE_PROFILE = "deleteProfiles";
+export const FUNCTION_DELETE_EVENT = "deleteEvents";
 
 
 
@@ -237,8 +238,8 @@ export const LIST_SWIPELEFT_OPENVALUE = 100;
 export const LIST_SWIPERIGHT_OPENVALUE=-75;
 
 //**********************  Test ***************************/
-export const TIME_OUT = 122999;
-export const JEST_TIME_OUT = 125999;
+export const TIME_OUT = 62999;
+export const JEST_TIME_OUT = 65999;
 
 //random generator
 export const RANDOM_NUMBER_SEED = 999999;

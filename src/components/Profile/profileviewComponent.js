@@ -9,7 +9,6 @@ import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { updateProfileRequest, addProfileRequest, updateProfile,  addProfile} from './Redux/Actions/profile.js';
 import { getDefaultProfile,iconManager,ICON_REMOVE_CIRCLE,ICON_ADD_CIRCLE,COMMON_ICON_STYLE, NEED_AT_LEAST_ANONYMOUS_LOGIN, TEXT_SAVE,
  TEXT_UPDATE, NO_PHOTO_AVAILABLE_URI,ICON_ALL_ARROWFORWARD,ICON_IOS_MAIL, ICON_ANDROID_MAIL,
 TEXT_WEBSITE, TEXT_MAIL,TEXT_PHONE,TEXT_DESCRIPTION, ICON_IOS_PORTRAIT,ICON_ANDROID_PORTRAIT,
@@ -38,7 +37,7 @@ class ProfileViewComponent extends Component {
    /*
    * Component action methods taken from properties or route
    */
-   const updateProfile = this.props.updateProfile || this.props.route.params.updateProfile;
+   //const updateProfile = this.props.updateProfile || this.props.route.params.updateProfile;
    const addProfile = this.props.addProfile || this.props.route.params.addProfile;
    const updateProfileRequest = this.props.updateProfileRequest || this.props.route.params.updateProfileRequest;
    const addProfileRequest = this.props.addProfileRequest || this.props.route.params.addProfileRequest;
@@ -59,11 +58,11 @@ class ProfileViewComponent extends Component {
     }else if(routeIndex && !this.props.route.params.loggedInUserProfile && this.props.route.params.profileIndex){
     let updateIndex = this.props.route.params.profileIndex ;
 
-      this.state = { dataIndex:routeIndex, isNewProfile:false, profile:this.props.route.params.profile, updateProfile:updateProfile, updateProfileRequest:updateProfileRequest};
+      this.state = { dataIndex:routeIndex, isNewProfile:false, profile:this.props.route.params.profile, updateProfileRequest:updateProfileRequest};
        //  console.log(this.state,"=====old 2222Updateable====",props )
 
     }else if(routeIndex && this.props.route.params.loggedInUserProfile){
-        this.state = {dataIndex:this.props.route.params.profileIndex, isNewProfile:false, profile:this.props.route.params.loggedInUserProfile , updateProfile:updateProfile, updateProfileRequest:updateProfileRequest};
+        this.state = {dataIndex:this.props.route.params.profileIndex, isNewProfile:false, profile:this.props.route.params.loggedInUserProfile , updateProfileRequest:updateProfileRequest};
      console.log(this.state,"=====PersonalProfle & Updateable====" )
 
     }
@@ -127,7 +126,7 @@ ImagePicker.showImagePicker(options, (response) => {
    //determine whether to show "Save" or "Update" depending on ownership
    const buttonText = this.state.isNewProfile ?  TEXT_SAVE : TEXT_UPDATE;
    const _saveButton =  
-   (<Button style={{backgroundColor:"maroon", padding:0, margin:0}} iconLeft small  onPress={()=> this.state.isNewProfile  ? this.state.addProfile(this.state.profile): this.state.updateProfile(this.state.profile)  } >
+   (<Button style={{backgroundColor:"maroon", padding:0, margin:0}} iconLeft small  onPress={()=> this.state.isNewProfile  ? this.state.addProfile(this.state.profile): this.state.updateProfileRequest(this.state.profile)  } >
              <Icon ios={ICON_IOS_CIRCLE} android={ICON_ANDROID_CIRCLE} style={COMMON_ICON_STYLE}/>
                <Text style={{color:"gold"}}>{buttonText}</Text>
             </Button>);

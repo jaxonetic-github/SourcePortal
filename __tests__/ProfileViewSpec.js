@@ -95,7 +95,7 @@ it('Profile renders and "update" mechanism functions', () => {
  const updateWebsiteText = 'New Test website';
  const updateDescriptionText = 'New Test description';
  const profile =  initialStoreState.profiles.profiles[profileIndexToTest];
- const {getByPlaceholderText, queryByPlaceholderText, getByText,getAllByText,getAllByTestId, getAllByDisplayValue, getByA11yLabel} =  render(<Profile route={{params:{profileIndex:profileIndexToTest, profile:profile, updateProfile:onPressUpdateProfile}}}  updateProfile={onPressUpdateProfile}/>);
+ const {getByPlaceholderText, queryByPlaceholderText, getByText,getAllByText,getAllByTestId, getAllByDisplayValue, getByA11yLabel} =  render(<Profile route={{params:{profileIndex:profileIndexToTest, profile:profile, updateProfileRequest:onPressUpdateProfile}}}  />);
 
 
  //Ensuring initial field labels displays

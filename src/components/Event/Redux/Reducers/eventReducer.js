@@ -11,7 +11,6 @@ const eventReducer = (state=eventStateSkeleton, action) => {
 
   switch(action.type) {
    case ADD_EVENT_REQUEST:
-    console.log('addnew event',action.payload);
     let stateEvts = {...state.events};
 
     stateEvts[action.payload.id] = action.payload;

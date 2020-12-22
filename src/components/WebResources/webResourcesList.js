@@ -7,7 +7,7 @@ import { StyleSheet,FlatList,TouchableOpacity} from 'react-native';
 import { Container, Header, Content, ListItem, Thumbnail,Card, CardItem } from 'native-base';
 import {commonViewButton, COMMON_DARK_BACKGROUND, NO_PHOTO_AVAILABLE_URI, COMMON_LISTVIEW_ITEM_SEPARATOR,
         ROUTE_SIMPLE_WEB_VIEW} from '../../constants.js'
-import WebResourcesList from './WebResourcesListComponent.js'
+import WebResourcesList from './webResourcesListComponent.js'
 
 const mapStateToProps = state => ({webResources: state.resourcesData.webResources})
 

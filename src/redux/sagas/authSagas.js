@@ -40,21 +40,15 @@ export function* actionWatcher(service) {
 /** only export the rootSaga
  *  single entry point to start all Sagas at once
  */
-export  function* rootSaga() {
+export  function* rootSaga(serviceMgr) {
   let authUser;
   const service =  new ServicesManager();
 
-yield service.initialize(REMOTE_RESOURCE_STRING)
+  const tmp = yield service.initialize(REMOTE_RESOURCE_STRING)
 //  yield service.authListen();
 
 try{
-    authUser = yield call(authorizeUser, service);
-
-    if(!authUser){
-      authUser = yield service.dbServices.authorizeAnonymously();
-    }
-
-    if(authUser.isLoggedIn){
+    if(service.authorizedUser.isLoggedIn){
 
     //start listening  for actions
     yield fork(actionWatcher, service);
@@ -63,11 +57,11 @@ try{
     yield call(  _onAuthSucess, service); 
 }
 else{
-  console.error('StitchUser Unable to Login:=>', authUser);
+  console.error('StitchUser Unable to Login:=>', authorizedUser);
 }
 
 }catch(error){
-console.log(authUser,"--------------",error);
+console.log("--------------",error);
  yield fork(actionWatcher, service);
 }
 
@@ -85,7 +79,7 @@ const results =  yield call (service.insertSingleProfile, action.payload);
 if(results && results.insertedId){
    yield put(addProfileSuccess(results));
       const profiles  = yield call ( fetchProfiles, service );
-  yield put(addProfile(profiles));
+ // yield put(addProfile(profiles));
 
       }else {
           //no client
@@ -108,6 +102,7 @@ if(results && results.insertedId){
     // Get a MongoDB Service Client
 try{
   const results = yield call (service.insertSingleEvent, action.payload) 
+
   if(results && results.insertedId){
    yield put(addEventSuccess(results))
 
@@ -132,7 +127,7 @@ try{
   export function* updateEvent(service, action) {
     // Get a MongoDB Service Client
 try{
-  const results = yield call (service.updateSingleEvent, action) 
+  const results = yield call (service.updateSingleEvent, action.payload) 
 
   const { matchedCount, modifiedCount } = results;
   
@@ -159,7 +154,7 @@ try{
   const results = yield call (service.updateSingleProfile, action) 
 
   const { matchedCount, modifiedCount } = results;
-  
+  console.log("updateProfile::", results);
   if(matchedCount && modifiedCount){
    yield put(updateProfileSuccess(results))
 
@@ -183,8 +178,8 @@ try{
   export function* deleteEvent(service, action) {
     // Get a MongoDB Service Client
 try{
-console.log("AAAAUUUTHHH SAGAS DELETE EVENT", action);
-const results = yield call(service.deleteEvent, action.payload);
+//console.log("AAAAUUUTHHH SAGAS DELETE EVENT", action);
+const results = yield call(service.deleteEvent, {"id":action.payload } );
     if(results.deletedCount>=0){
   
    yield put(deleteEventSuccess(results.deletedCount ))
@@ -206,15 +201,14 @@ const results = yield call(service.deleteEvent, action.payload);
  *   @param service : the DAO service object
  *   @param action : a redux action where action.payload={id:xyz}
  */
-  export function* deleteProfile(service,action) {
+  export function* deleteProfile(service, action) {
 
 try{
-const results = yield call (service.deleteProfile, action.payload);
-
-//FUTURE : note in the logs when deleteCount is 0 
+const results = yield call (service.deleteProfile,{"id":action.payload } );
+////FUTURE : note in the logs when deleteCount is 0 
    if(results.deletedCount>=0){
    yield put(deleteProfileSuccess(results.deletedCount ))
-   yield put(removeLocalProfile(action.payload));
+   //yield put(removeLocalProfile(action.payload));
         }else {
            yield put(deleteProfileFailure("-1 deletedCount detected" ))
         }  

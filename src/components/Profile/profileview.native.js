@@ -6,7 +6,7 @@ import ProfileViewComponent from './profileviewComponent.js';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { addProfile,updateProfile, updateProfileRequest, addProfileRequest } from './Redux/Actions/profile.js';
+import { addProfile, updateProfileRequest, addProfileRequest } from './Redux/Actions/profile.js';
 import {  NEED_AT_LEAST_ANONYMOUS_LOGIN, NO_PHOTO_AVAILABLE_URI} from '../../constants.js';
 
 
@@ -23,7 +23,7 @@ const profiles = state.profiles.profiles;
 }
 
 function matchDispatchToProps(dispatch){
-  return bindActionCreators({updateProfile:updateProfile, updateProfileRequest:updateProfileRequest, addProfileRequest:addProfileRequest, addProfile:addProfile}, dispatch)
+  return bindActionCreators({ updateProfileRequest:updateProfileRequest, addProfileRequest:addProfileRequest}, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(ProfileViewComponent)

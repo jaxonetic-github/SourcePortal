@@ -39,35 +39,28 @@ import CrudService from './stitchCRUD_api.js';
  *
  */
 export default class ServicesManager {
-  static dbClient = async () => {
-    const client = Stitch.hasAppClient(REMOTE_RESOURCE_STRING)
-      ? Stitch.defaultAppClient
-      : Stitch.initializeDefaultAppClient(REMOTE_RESOURCE_STRING);
-
-    return client;
-  };
+   dbClient = async () => this.client;
 
   /**
    * Initialize sub "services" like CRUD services
    *
    */
   async initialize() {
-    let client = await ServicesManager.dbClient();
-    this.db = await client
+    this.client = Stitch.hasAppClient(REMOTE_RESOURCE_STRING) ? await  Stitch.getAppClient(REMOTE_RESOURCE_STRING): await Stitch.initializeAppClient(REMOTE_RESOURCE_STRING);
+    this.authorizedUser = (this.client.auth && this.client.auth.isLoggedIn ) ? 
+          this.client.auth.authInfo : 
+          await this.client.auth.loginWithCredential(new AnonymousCredential());
+    this.db = await this.client
       .getServiceClient(RemoteMongoClient.factory, ATLAS_FACTORY)
       .db(DBNAME);
-    this.stitchCrudServices = new CrudService(
-      this.db,
-      ServicesManager.dbClient,
-    );
+    this.stitchCrudServices = new CrudService(this.db, this.client);
     this.crud = this.stitchCrudServices;
-
   }
 
   /**
    * Privately retrieve the google keys required for google sign in and Geocoding API
    * Ths method may become deprecated in the future when I move the GoogleSign to a central server
-   */
+   *
   async configureGoogleKeys() {
     const client = await ServicesManager.dbClient();
     const googleWebClientKey = await client.callFunction(
@@ -97,20 +90,20 @@ export default class ServicesManager {
   /**
    * Log in to Stitch backend anonymously
    */
-  async authorizeAnonymously() {
+  async authorizeAnonymously(client) {
     try {
       let authorizedUser;
       // Check if this user has already authenticated and we're here
-      const client = await ServicesManager.dbClient();
+      //const client = await ServicesManager.dbClient();
 
-      if (client.auth.isLoggedIn) {
-        authorizedUser = client.auth.authInfo;
+      if (this.client.auth.isLoggedIn) {
+        authorizedUser = this.client.auth.authInfo;
       } else {
-        authorizedUser = await client.auth.loginWithCredential(
+        authorizedUser = await this.client.auth.loginWithCredential(
           new AnonymousCredential(),
         );
       }
-
+  this.authorizedUser = authorizedUser;
   return  authorizedUser;
     } catch (error) {
       return {error};
@@ -126,9 +119,9 @@ export default class ServicesManager {
     if (!authCode) {return null;}
     try {
       let googleCredential = new GoogleCredential(authCode);
-      const client = await ServicesManager.dbClient();
+      //const client = await ServicesManager.dbClient();
 
-      const authorizedUser = await client.auth.loginWithCredential(
+      const authorizedUser = await this.client.auth.loginWithCredential(
         googleCredential,
       );
 
@@ -145,9 +138,9 @@ return authorizedUser;
     try {
       // Now remove user1
       //await client.auth.removeUser();
-
-      const unAuthorizedUser = await (this.client
-        ? this.client.auth.logout()
+//console.log("1Logging Out->", unAuthorizedUser);
+      const unAuthorizedUser =  (this.client
+        ? await this.client.auth.logout()
         : false);
 
       return unAuthorizedUser;
