@@ -39,7 +39,6 @@ import CrudService from './stitchCRUD_api.js';
  *
  */
 export default class ServicesManager {
-   dbClient = async () => this.client;
 
   /**
    * Initialize sub "services" like CRUD services
@@ -113,7 +112,7 @@ export default class ServicesManager {
   /**
    * googleSignIn - create a GoogleCredential from the authCode and attempt to login to Stitch with it.
    * @param authCode (required) - the one-time/first-time serverAuthCode specified by google
-   */
+   *
   async googleSignIn(authCode) {
     //parameter check
     if (!authCode) {return null;}
@@ -130,7 +129,7 @@ return authorizedUser;
       return {errorStack: error};
     }
   }
-
+*/
   /**
    * Log out using the client's client.auth.logout()
    */
