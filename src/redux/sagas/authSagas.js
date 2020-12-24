@@ -74,6 +74,7 @@ console.log("--------------",error);
  * @param action,  redux action with a profile object as payload
  */
   export function* insertProfile(service, action) {
+    console.log("Auth Saga insert profile", action);
    try {
 const results =  yield call (service.insertSingleProfile, action.payload);
 if(results && results.insertedId){

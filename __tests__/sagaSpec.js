@@ -16,9 +16,7 @@ import eventsReducer from '../src/components/Event/Redux/Reducers/eventReducer.j
 
 import ServicesManager from '../src/services/servicesManager'
 
-import {
-  rootSaga, insertProfile, insertEvent, fetchProfiles, fetchEvents, actionWatcher,
-} from '../src/redux/sagas/authSagas';
+import { rootSaga, actionWatcher} from '../src/redux/sagas/authSagas';
 import DBService from '../src/services/servicesManager';
 import 'isomorphic-fetch'; // --> https://github.com/facebook/react-native/issues/11537
 import {
@@ -90,7 +88,7 @@ it('1. inserts mock profile into DB', () => {
     const finalState = STATE.initialStoreState;
     finalState.profiles.profiles[auxprof.id] = auxprof;
 
-   expectSaga(actionWatcher, service)
+   expectSaga(rootSaga, service)
        .withReducer(profilesReducer, STATE.initialStoreState.profiles)
        .dispatch(addProfileRequest(auxprof))
 
@@ -99,7 +97,7 @@ it('1. inserts mock profile into DB', () => {
    // .put.actionType( ADD_PROFILE_REQUEST)
     .put.actionType(ADD_PROFILE_SUCCESS)
     .hasFinalState(finalState)
-   // .run(TIME_OUT);
+    .run(TIME_OUT);
 });
 it('2. inserts mock event into DB', () => {
     const auxEvent = getDefaultEvent();
@@ -117,7 +115,7 @@ it('2. inserts mock event into DB', () => {
    // .put.actionType( ADD_PROFILE_REQUEST)
     .put.actionType(ADD_EVENT_SUCCESS)
     //.hasFinalState(finalState)
-    //.run(TIME_OUT);
+    .run(TIME_OUT);
 });
 
 
@@ -158,7 +156,7 @@ it('2. inserts mock event into DB', () => {
      .dispatch(deleteProfileRequest( prof.id ))
       .put.actionType(DELETE_PROFILE_SUCCESS)
     // .hasFinalState(finalState)
-      //.run(TIME_OUT);
+      .run(TIME_OUT);
   });
 
 
@@ -195,7 +193,7 @@ it('2. inserts mock event into DB', () => {
      .put.actionType(DELETE_EVENT_SUCCESS)
 
     // .hasFinalState(finalState)
-     // .run(TIME_OUT);
+      .run(TIME_OUT);
   });
 
 it('updates a profile in the DB', async () => {
@@ -212,7 +210,7 @@ it('updates a profile in the DB', async () => {
     
     prof.name = new Date().toString();
 
-    return expectSaga(actionWatcher, service)
+     expectSaga(actionWatcher, service)
      .withReducer(profilesReducer, STATE.initialStoreState.profiles)
       .provide({
        call(effect, next) {
@@ -242,11 +240,14 @@ it('updates a profile in the DB', async () => {
 
    
     // .hasFinalState(finalState)
-      //.run(TIME_OUT);
+      .run(TIME_OUT);
 
 });
-
+/*
  it('updates mock event from DB ', async () => {
+      if(!service.crud)
+  await service.initialize(REMOTE_RESOURCE_STRING);
+
     const DBEvents = await service.crud.fetchEvents();
     const evt =  (DBEvents.length -3 >0) ? DBEvents[DBEvents.length-2] : DBEvents[0] ;
 
@@ -269,7 +270,7 @@ it('updates a profile in the DB', async () => {
           // Allow Redux Saga to handle other `call` effects
           return next();
         },
-      }).dispatch(addEventRequest(evt))
+      })
     // assert that the saga will eventually yield `put`
     // with the expected action
 
@@ -278,7 +279,7 @@ it('updates a profile in the DB', async () => {
     
 
     // .hasFinalState(finalState)
-      
+     .run() 
   });
 /*
   it('fetches events', async () => expectSaga(fetchEvents, service)
