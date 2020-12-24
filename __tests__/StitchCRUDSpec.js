@@ -183,7 +183,7 @@ describe('Integration tests between Sagas, and backend services (MongoStitch)', 
   afterAll(async () => {
      //jest.setTimeout(JEST_TIME_OUT);
      //service.logout();
-      setTimeout(function() {process.exit();}, 1200);
+     // setTimeout(function() {process.exit();}, 1200);
   }); 
 
 });

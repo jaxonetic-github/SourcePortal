@@ -23,7 +23,7 @@ import createSagaMiddleware from 'redux-saga'
 
 import { initialStoreState } from '../src/redux/state.js';
 
-import {  fetchProfileRequest, deleteProfileRequest, addProfileSuccess, addProfile, addProfileRequest } from '../src/components/Profile/Redux/Actions/profile.js';
+import {  fetchProfileRequest, deleteProfileRequest, addProfileSuccess, addProfileRequest } from '../src/components/Profile/Redux/Actions/profile.js';
 import {getDefaultProfile} from '../src/constants.js'
 import Trubrary from '../src/components/Trubrary/trubraryComponent.js';
 
@@ -56,7 +56,7 @@ const rootReducer = combineReducers({profiles: profilesReducer,  auth: authReduc
       const newProfile = getDefaultProfile();
       const testNewState = {...initialState.profiles,  [newProfile.id]:newProfile};
       const expectedState = {profiles:testNewState} ;
-      const newState = profilesReducer(initialState, addProfile(newProfile));
+      const newState = profilesReducer(initialState, addProfileRequest(newProfile));
       expect(newState.profiles).toEqual(expectedState.profiles);
     });
 
@@ -68,8 +68,8 @@ const rootReducer = combineReducers({profiles: profilesReducer,  auth: authReduc
       const newProfileTwo = getDefaultProfile();
       const testNewProfilesState = {...initialState.profiles,  [newProfileOne.id]:newProfileOne,  [newProfileTwo.id]:newProfileTwo};
       const expectedState = {profiles:testNewProfilesState} ;
-      const afterAddOneState = profilesReducer(initialState, addProfile(newProfileOne));
-        const afterAddTwoState = profilesReducer(afterAddOneState, addProfile(newProfileTwo));
+      const afterAddOneState = profilesReducer(initialState, addProfileRequest(newProfileOne));
+        const afterAddTwoState = profilesReducer(afterAddOneState, addProfileRequest(newProfileTwo));
 
       //expect 2 more profiles
       expect(initialStateProfileCount+2).toEqual(Object.keys(afterAddTwoState.profiles).length);

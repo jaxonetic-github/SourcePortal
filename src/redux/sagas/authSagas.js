@@ -154,7 +154,6 @@ try{
   const results = yield call (service.updateSingleProfile, action) 
 
   const { matchedCount, modifiedCount } = results;
-  console.log("updateProfile::", results);
   if(matchedCount && modifiedCount){
    yield put(updateProfileSuccess(results))
 

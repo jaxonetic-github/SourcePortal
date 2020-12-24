@@ -54,6 +54,7 @@ export default class ServicesManager {
       .db(DBNAME);
     this.stitchCrudServices = new CrudService(this.db, this.client);
     this.crud = this.stitchCrudServices;
+    return true;
   }
 
   /**

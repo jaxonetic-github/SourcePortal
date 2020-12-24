@@ -79,12 +79,16 @@ expect(queryByText("Sertima")).toBeNull();
 
 it('Trubrary renders with redux and saga',()=>{
 
+ 	const videoData = initialStoreState.resourcesData.youTubeResources;
 
-  <Provider store={store}>
-   <Trubrary />
-  </Provider>
+    const {getByPlaceholderText, queryAllByText, getByText,queryByText } = render(<Trubrary videoData={videoData} onlineMediaContent={initialStoreState.resourcesData.onlineMediaContent}   webResources={initialStoreState.resourcesData.webResources} />);
 
+ 	
+//ensure the three tab headers display
+   const tab = getByText("Media Outlets");
+   fireEvent.press(tab)
 
+   getByText("Innerversity");
 });
 
 });
