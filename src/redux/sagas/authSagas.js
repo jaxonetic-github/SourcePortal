@@ -15,7 +15,7 @@ import { addEventSuccess,addEventFailure,removeLocalEvent,deleteEventSuccess,upd
 import { deleteProfileSuccess,updateProfileSuccess,updateProfileFailure,fetchProfileSuccess, removeLocalProfile, addProfile,fetchProfileFailure, addProfileSuccess,addProfileFailure,fetchProfileRequest,deleteProfileFailure } from '../../components/Profile/Redux/Actions/profile.js'
 
 import ServicesManager from '../../services/servicesManager'
-import {googleAuthenticationPress, _onPressLogout,googleSilentLogin} from './googleSaga'
+//import {googleAuthenticationPress, _onPressLogout,googleSilentLogin} from './googleSaga'
 import {resourceData, REMOTE_RESOURCE_STRING} from '../../constants.js'
 
 /**
@@ -26,7 +26,7 @@ export function* actionWatcher(service) {
      yield takeEvery(LOGIN_USER_REQUEST, authorizeUser,service);
   yield takeEvery(GOOGLE_SIGNOUT, logout,service);
   yield takeEvery(LOGIN_SUCCESS, _onAuthSucess, service);
-  yield takeEvery (GOOGLE_SIGNIN_REQUEST, googleAuthenticationPress,service,false )
+  //yield takeEvery (GOOGLE_SIGNIN_REQUEST, googleAuthenticationPress,service,false )
    yield takeEvery(ADD_PROFILE_REQUEST, insertProfile, service.stitchCrudServices);
    yield takeEvery(ADD_EVENT_REQUEST, insertEvent, service.stitchCrudServices);
    yield takeEvery(UPDATE_EVENT_REQUEST, updateEvent, service.stitchCrudServices);

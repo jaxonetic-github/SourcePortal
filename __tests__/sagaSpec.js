@@ -26,7 +26,7 @@ import {
   FETCH_PROFILE_REQUEST, FETCH_PROFILE_SUCCESS, FETCH_EVENT_REQUEST, FETCH_EVENT_SUCCESS,
   ADD_PROFILE_TO_USERPROFILES,UPDATE_EVENT_SUCCESS,UPDATE_PROFILE_SUCCESS
 } from '../src/redux/types.js';
-import { googleAuthenticationPress } from '../src/redux/sagas/googleSaga';
+//import { googleAuthenticationPress } from '../src/redux/sagas/googleSaga';
 
 import {
  REMOTE_RESOURCE_STRING, TIME_OUT, JEST_TIME_OUT, STATE, TYPES, getDefaultEvent, getDefaultProfile,

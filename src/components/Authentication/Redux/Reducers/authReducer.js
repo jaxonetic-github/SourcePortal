@@ -38,7 +38,7 @@ console.log("authReducer::", action)
                   app:{...state.app},
                   auth:NEED_AT_LEAST_ANONYMOUS_LOGIN
               }
-   
+   /*
        case GOOGLE_SIGNIN_SUCCESS:
          console.log(action);
       console.log(state.app);
@@ -47,6 +47,7 @@ console.log("authReducer::", action)
         app:{...state.app, registeredUser: action.payload.auth.authInfo.userProfile.identities[0].id},
         auth:action.payload.auth.authInfo
       };
+      */
 /*
      {  auth:{ googleAuthCode: action.payload,
                       google:action.payload,
