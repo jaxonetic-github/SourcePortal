@@ -5,3 +5,5 @@ before_install:
   - npm install -g codecov
 script:
   - codecov -t 9bc6f701-885b-4b81-ab10-38c72ddc22b2
+after_success:
+ - bash <(curl -s https://codecov.io/bash)
