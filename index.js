@@ -92,6 +92,8 @@ import {
   iconManager,
 } from './src/constants.js';
 
+import ServicesManager from './src/services/servicesManager.js';
+
 // Logger with default options
 import logger from 'redux-logger';
 import SideMenu from 'react-native-side-menu';
@@ -135,8 +137,9 @@ const store = createStore(
 
 //YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps','Warning: componentWillUpdate', 'Warning: componentWillMount']);
 console.disableYellowBox = true;
+  const service = new ServicesManager();
 
-sagaMiddleware.run(rootSaga);
+sagaMiddleware.run(rootSaga, service);
 
 /*
  * A Navigation Stack for Profile related views (i.e. ProfileSearch, Profile)
